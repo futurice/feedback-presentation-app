@@ -9,14 +9,17 @@ app.use(logfmt.requestLogger());
 
 function insertbsdata(db)
 {
-  for(i = 0; i < 20; i++)
-    {
-      db.insert({ question: "What?", topic: "Design", type:"question"}, function(err, body) {
-        if (!err)
-          console.log(body);
-        });
-    }
-
+  
+  db.insert({ question: "Why?", topic: "Development", type:"question"});
+  db.insert({ question: "What?", topic: "Design", type:"question"});
+  db.insert({ question: "What?", topic: "Design", type:"question"});
+  db.insert({ question: "What?", topic: "Design", type:"question"});
+  db.insert({ question: "Where?", topic: "Development", type:"question"});
+  db.insert({ question: "When?", topic: "Design", type:"question"});
+  db.insert({ question: "What?", topic: "Design", type:"question"});
+  db.insert({ question: "What?", topic: "Design", type:"question"});
+  db.insert({ question: "What?", topic: "Communication", type:"question"});
+  db.insert({ question: "What?", topic: "Communication", type:"question"});
 }
 
 //MIGRATION
@@ -59,7 +62,7 @@ nano.db.destroy('futufeedback', function() {
         }
 
         // make sure to stringify the results :)
-        send(JSON.stringify(results));
+        send(JSON.stringify({"futuFeedbackItems":results}));
       });
     }
     } 
