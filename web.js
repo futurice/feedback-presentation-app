@@ -4,6 +4,7 @@ var logfmt = require("logfmt");
 var nano = require('nano')('http://localhost:5984');
 var app = express();
 
+var db;
 
 app.use(logfmt.requestLogger());
 
@@ -39,7 +40,7 @@ function migration()
   // create a new database
   nano.db.create('futufeedback', function() {
     // specify the database we are going to use
-    var db = nano.use('futufeedback');
+    db = nano.use('futufeedback');
     // and insert a document in it
     db.insert(
       { 
@@ -50,6 +51,16 @@ function migration()
             function(doc)
             {
               if(doc.type)
+              {
+                emit(doc.type, doc);
+              }
+            }
+          },
+          "only_questions": 
+          {  "map": 
+            function(doc)
+            {
+              if(doc.type && doc.type == "question")
               {
                 emit(doc.type, doc);
               }
@@ -104,7 +115,7 @@ function migration()
           });
         }
         // make sure to stringify the results :)
-      send(JSON.stringify({"futuFeedbackItems":results}));
+      send(JSON.stringify(results));
     });
     }
   } 
@@ -118,16 +129,24 @@ function migration()
 
 migration();
 
-
-app.get('/', function(req, res) {
+app.get('/projects/', function(req, res) {
   res.set('Content-Type', 'application/json');
-  db.view('questions', 'by_question', ['Design'], function(err, body) {
-    if (!err) {
-     var obj = {};
-     obj['futuFeedbackItems'] = body.rows;
-     res.send(obj);
-   }
+  var project_names = ['Finavia', 'Sanoma', 'SATO', 'feedbackapp!'];
+  res.send(JSON.stringify(project_names));
  });
+
+app.post('/futufeedback/', function(req, res) {
+  console.log('posting stuff');
+  console.log(req.body);
+ });
+
+app.get('/feedbackitems/', function(req, res) {
+  res.set('Content-Type', 'application/json');
+  db.view_with_list('questions', 'only_questions', 'question_list',  function(err, body) {
+  if (!err) {
+    res.send(JSON.stringify(body));
+  }
+});
 });
 
 /*
