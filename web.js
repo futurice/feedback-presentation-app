@@ -1,5 +1,9 @@
 // web.js
 var express = require("express");
+var bodyParser = require('body-parser')
+
+
+
 var logfmt = require("logfmt");
 var nano = require('nano')('http://localhost:5984');
 var app = express();
@@ -7,7 +11,7 @@ var app = express();
 var db;
 
 app.use(logfmt.requestLogger());
-
+app.use(bodyParser.json());
 
 
 //MIGRATION
@@ -36,6 +40,7 @@ function migration()
 
   }
   // clean up the database we created previously
+  console.log('clean db')
   nano.db.destroy('futufeedback', function() {
   // create a new database
   nano.db.create('futufeedback', function() {
@@ -135,12 +140,18 @@ app.get('/projects/', function(req, res) {
   res.send(JSON.stringify(project_names));
  });
 
-app.post('/futufeedback/', function(req, res) {
+app.post('/futufeedback/:projectname', function(req, res) {
   console.log('posting stuff');
   console.log(req.body);
+  var answers = req.body;
+  for(var ans in answers)
+  {
+      console.log(req.params.projectname);
+      db.insert({ question: ans.question, project: req.params.projectname, answer: 2, type:"answer"});
+  }
  });
 
-app.get('/feedbackitems/', function(req, res) {
+app.get('/futufeedback/', function(req, res) {
   res.set('Content-Type', 'application/json');
   db.view_with_list('questions', 'only_questions', 'question_list',  function(err, body) {
   if (!err) {
