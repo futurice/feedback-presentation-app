@@ -116,7 +116,8 @@ function migration()
         while (row = getRow()) {
           results.push({
             question: row.value.question,
-            topic: row.value.topic
+            topic: row.value.topic,
+            answer: 0
           });
         }
         // make sure to stringify the results :)
@@ -143,12 +144,14 @@ app.get('/projects/', function(req, res) {
 app.post('/futufeedback/:projectname', function(req, res) {
   console.log('posting stuff');
   console.log(req.body);
-  var answers = req.body;
-  for(var ans in answers)
+  console.log(req.body[0].topic);
+  for(var i = 0; i < req.body.length; i++)
   {
-      console.log(req.params.projectname);
-      db.insert({ question: ans.question, project: req.params.projectname, answer: 2, type:"answer"});
+      var a = req.body[i];
+      console.log(a);
+      db.insert({ question: a.question, project: req.params.projectname, answer: a.answer, type:"answer"});
   }
+  res.send();
  });
 
 app.get('/futufeedback/', function(req, res) {
