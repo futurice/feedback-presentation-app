@@ -1,6 +1,7 @@
 // web.js
 var express = require("express");
 var bodyParser = require('body-parser')
+var mapreduce = require('./mapreduce');
 
 
 
@@ -48,80 +49,87 @@ function migration()
     db = nano.use('futufeedback');
     // and insert a document in it
     db.insert(
+    { 
+      "views": 
       { 
-        "views": 
-        { 
-          "by_type": 
-          {  "map": 
-            function(doc)
-            {
-              if(doc.type)
-              {
-                emit(doc.type, doc);
-              }
-            }
-          },
-          "only_questions": 
-          {  "map": 
-            function(doc)
-            {
-              if(doc.type && doc.type == "question")
-              {
-                emit(doc.type, doc);
-              }
-            }
-          },
-          "answers_by_project": 
-          {  "map": 
-            function(doc)
-            {
-              if(doc.type && doc.type == 'answer' && doc.project)
-              {
-                emit(doc.project, doc);
-              }
-            },
-             "reduce": 
-             function(keys, values, rereduce) {
-              if (!rereduce){
-                var length = values.length
-                return [sum(values) / length, length]
-              }else{
-                var length = sum(values.map(function(v){return v[1]}))
-                var avg = sum(values.map(function(v){
-                  return v[0] * (v[1] / length)
-                }))
-                return [avg, length]
-              }
-            }
-          },
-          "average_for_question": 
-          {  "map": 
-            function(doc)
-            {
-              if(doc.type && doc.type == 'answer' && doc.question)
-              {
-                emit(doc.question, doc.answer);
-              }
-            },
-             "reduce": 
-             function(keys, values, rereduce) {
-              if (!rereduce){
-                var length = values.length
-                return [sum(values) / length, length]
-              }else{
-                var length = sum(values.map(function(v){return v[1]}))
-                var avg = sum(values.map(function(v){
-                  return v[0] * (v[1] / length)
-                }))
-                return [avg, length]
-              }
-            }
+        "by_type": 
+        {  "map": 
+        function(doc)
+        {
+          if(doc.type)
+          {
+            emit(doc.type, doc);
           }
-        }, 
-        "lists" :
- {
-  "question_list" : 
-  function (head, req) {
+        }
+      },
+      "answers_by_project": 
+      {  "map": 
+      function(doc)
+      {
+        if(doc.type && doc.type == 'answer' && doc.project)
+        {
+          emit(doc.project, doc) ;
+        }
+      },
+      "reduce": 
+      function(key, values, rereduce) {
+
+        if (!rereduce){
+          values = values.map(function(elem)
+          {
+            return parseFloat(elem.answer);
+          }
+          );
+          var length = values.length
+                    log(sum(values) / length);
+
+          return [sum(values) / length, length]
+        }else{
+          var length = sum(values.map(function(v){return v[1]}))
+          var avg = sum(values.map(function(v){
+            return v[0] * (v[1] / length)
+          }))
+          return [avg, length]
+        }
+      }
+    },
+    "answers_by_question": 
+    {  
+      "map": 
+      function(doc)
+      {
+        if(doc.type && doc.type == 'answer' && doc.question)
+        {
+          emit(doc.question, doc.answer);
+        }
+      },
+      "reduce":
+      function(keys, values, rereduce) {
+        if (!rereduce){
+          values = values.map(function(elem)
+          {
+            return parseFloat(elem);
+          }
+          );
+          log(values);
+          var length = values.length
+          log(sum(values) / length);
+          return (sum(values) / length);
+        }else{
+          log('rereduce');
+          var length = sum(values.map(function(v){return v[1]}))
+          var avg = sum(values.map(function(v){
+            return v[0] * (v[1] / length)
+          }))
+          return [avg, length]
+        }
+      }
+    }
+  }, 
+  "lists" :
+  {
+    "question_list" : 
+    function (head, req) {
       // specify that we're providing a JSON response
       provides('json', function() 
       {
@@ -142,8 +150,8 @@ function migration()
 }, '_design/questions', function (error, response) {
   console.log("yay");
 });
-    insertbsdata(db);
-  });
+insertbsdata(db);
+});
 });
 }
 
@@ -153,36 +161,35 @@ app.get('/projects/', function(req, res) {
   res.set('Content-Type', 'application/json');
   var project_names = ['Finavia', 'Sanoma', 'SATO', 'feedbackapp!'];
   res.send(JSON.stringify(project_names));
- });
+});
 
 app.get('/projects/:projectname/avg/', function(req, res) {
-  db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:true}, function(err, body) {
-  if (!err) {
-    var questionlist = body.rows.map(
-      function(elem)
-      {
-        return {'question':elem.value.question, 'answer': elem.value.answer, 'topic': elem.value.topic};
-      }
-      );
-    res.send(JSON.stringify(questionlist));
-  }
-  else res.send(404);
- });
+  db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:true, group:true}, function(err, body) {
+    if (!err) {
+      console.log(body.rows[0].value);
+      res.send(JSON.stringify(body));
+    }
+    else 
+    {
+      console.log(err);
+      res.send(404);
+    }
+  });
 });
 
 app.get('/projects/:projectname/all/', function(req, res) {
   db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:false}, function(err, body) {
-  if (!err) {
-    var questionlist = body.rows.map(
-      function(elem)
-      {
-        return {'question':elem.value.question, 'answer': elem.value.answer, 'topic': elem.value.topic};
-      }
-      );
-    res.send(JSON.stringify(questionlist));
-  }
-  else res.send(404);
- });
+    if (!err) {
+      var questionlist = body.rows.map(
+        function(elem)
+        {
+          return {'question':elem.value.question, 'answer': elem.value.answer, 'topic': elem.value.topic};
+        }
+        );
+      res.send(JSON.stringify(questionlist));
+    }
+    else res.send(404);
+  });
 });
 
 app.post('/futufeedback/:projectname', function(req, res) {
@@ -191,26 +198,26 @@ app.post('/futufeedback/:projectname', function(req, res) {
   console.log(req.body[0].topic);
   for(var i = 0; i < req.body.length; i++)
   {
-      var a = req.body[i];
-      console.log(a);
-      db.insert({ question: a.question, project: req.params.projectname, answer: a.answer, type:"answer"});
+    var a = req.body[i];
+    console.log(a);
+    db.insert({ question: a.question, project: req.params.projectname, answer: a.answer, type:"answer"});
   }
   res.send();
- });
+});
 
 app.get('/futufeedback/', function(req, res) {
   res.set('Content-Type', 'application/json');
   db.view('questions', 'by_type', {keys: ['question']}, function(err, body) {
-  if (!err) {
-    var questionlist = body.rows.map(
-      function(elem)
-      {
-        return {'question':elem.value.question, 'topic': elem.value.topic};
-      }
-      );
-    res.send(JSON.stringify(questionlist));
-  }
-});
+    if (!err) {
+      var questionlist = body.rows.map(
+        function(elem)
+        {
+          return {'question':elem.value.question, 'topic': elem.value.topic, 'answer': 0};
+        }
+        );
+      res.send(JSON.stringify(questionlist));
+    }
+  });
 });
 
 /*
