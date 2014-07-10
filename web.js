@@ -32,10 +32,10 @@ function migration()
     db.insert({ question: "What?", topic: "Communication", type:"question"});
     db.insert({ question: "What?", topic: "Communication", type:"question"});
 
-    db.insert({ question: "What?", project: "jokuprokkis", answer: "3", type:"answer"});
-    db.insert({ question: "Where?", project: "jokuprokkis", answer: "2", type:"answer"});
-    db.insert({ question: "What?", project: "jokuprokkis", answer: "3", type:"answer"});
-    db.insert({ question: "What?", project: "jokuprokkis", answer: "2", type:"answer"});
+    db.insert({ question: "What?", project: "jokuprokkis", topic: 'Design', answer: "3", type:"answer"});
+    db.insert({ question: "Where?", project: "jokuprokkis", topic: 'Design', answer: "2", type:"answer"});
+    db.insert({ question: "What?", project: "jokuprokkis", topic: 'Design', answer: "3", type:"answer"});
+    db.insert({ question: "What?", project: "jokuprokkis", topic: 'Development', answer: "2", type:"answer"});
 
 
   }
@@ -71,13 +71,26 @@ function migration()
               }
             }
           },
-          "by_project": 
+          "answers_by_project": 
           {  "map": 
             function(doc)
             {
-              if(doc.project)
+              if(doc.type && doc.type == 'answer' && doc.project)
               {
                 emit(doc.project, doc);
+              }
+            },
+             "reduce": 
+             function(keys, values, rereduce) {
+              if (!rereduce){
+                var length = values.length
+                return [sum(values) / length, length]
+              }else{
+                var length = sum(values.map(function(v){return v[1]}))
+                var avg = sum(values.map(function(v){
+                  return v[0] * (v[1] / length)
+                }))
+                return [avg, length]
               }
             }
           },
@@ -91,16 +104,17 @@ function migration()
               }
             },
              "reduce": 
-            function(keys, values)
-            {
-              var i = 0;
-              var avg = 0.0;
-              for(var value in values)
-              {
-                avg = (avg*i +value) / (i + 1);
-                i++;
+             function(keys, values, rereduce) {
+              if (!rereduce){
+                var length = values.length
+                return [sum(values) / length, length]
+              }else{
+                var length = sum(values.map(function(v){return v[1]}))
+                var avg = sum(values.map(function(v){
+                  return v[0] * (v[1] / length)
+                }))
+                return [avg, length]
               }
-              return avg;
             }
           }
         }, 
@@ -141,6 +155,36 @@ app.get('/projects/', function(req, res) {
   res.send(JSON.stringify(project_names));
  });
 
+app.get('/projects/:projectname/avg/', function(req, res) {
+  db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:true}, function(err, body) {
+  if (!err) {
+    var questionlist = body.rows.map(
+      function(elem)
+      {
+        return {'question':elem.value.question, 'answer': elem.value.answer, 'topic': elem.value.topic};
+      }
+      );
+    res.send(JSON.stringify(questionlist));
+  }
+  else res.send(404);
+ });
+});
+
+app.get('/projects/:projectname/all/', function(req, res) {
+  db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:false}, function(err, body) {
+  if (!err) {
+    var questionlist = body.rows.map(
+      function(elem)
+      {
+        return {'question':elem.value.question, 'answer': elem.value.answer, 'topic': elem.value.topic};
+      }
+      );
+    res.send(JSON.stringify(questionlist));
+  }
+  else res.send(404);
+ });
+});
+
 app.post('/futufeedback/:projectname', function(req, res) {
   console.log('posting stuff');
   console.log(req.body);
@@ -156,9 +200,15 @@ app.post('/futufeedback/:projectname', function(req, res) {
 
 app.get('/futufeedback/', function(req, res) {
   res.set('Content-Type', 'application/json');
-  db.view_with_list('questions', 'only_questions', 'question_list',  function(err, body) {
+  db.view('questions', 'by_type', {keys: ['question']}, function(err, body) {
   if (!err) {
-    res.send(JSON.stringify(body));
+    var questionlist = body.rows.map(
+      function(elem)
+      {
+        return {'question':elem.value.question, 'topic': elem.value.topic};
+      }
+      );
+    res.send(JSON.stringify(questionlist));
   }
 });
 });
