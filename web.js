@@ -222,7 +222,7 @@ res.set('Content-Type', 'application/json');
   res.send('{"futuFeedbackItems":[{"topic":"Design","question":"Koska"},{"topic":"Design","question":"Miksi"},{"topic":"Design","question":"Why"},{"topic":"Development","question":"Koska"},{"topic":"Development","question":"Miksi"},{"topic":"Development","question":"Why"}]}');
 });
 */
-var port = Number(process.env.PORT || 5000);
+var port = Number(process.env.PORT || 8001);
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
