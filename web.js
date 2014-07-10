@@ -81,8 +81,6 @@ function migration()
           }
           );
           var length = values.length
-                    log(sum(values) / length);
-
           return [sum(values) / length, length]
         }else{
           var length = sum(values.map(function(v){return v[1]}))
@@ -104,19 +102,17 @@ function migration()
         }
       },
       "reduce":
-      function(keys, values, rereduce) {
+      function(key, values, rereduce) {
+
         if (!rereduce){
           values = values.map(function(elem)
           {
-            return parseFloat(elem);
+            return parseFloat(elem.answer);
           }
           );
-          log(values);
           var length = values.length
-          log(sum(values) / length);
-          return (sum(values) / length);
+          return [sum(values) / length, length]
         }else{
-          log('rereduce');
           var length = sum(values.map(function(v){return v[1]}))
           var avg = sum(values.map(function(v){
             return v[0] * (v[1] / length)
@@ -167,7 +163,7 @@ app.get('/projects/:projectname/avg/', function(req, res) {
   db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:true, group:true}, function(err, body) {
     if (!err) {
       console.log(body.rows[0].value);
-      res.send(JSON.stringify(body));
+      res.send(JSON.stringify(body.rows[0].value[0]));
     }
     else 
     {
