@@ -191,13 +191,8 @@ app.get('/projects/:projectname/all/', function(req, res) {
 app.post('/futufeedback/:projectname', function(req, res) {
   console.log('posting stuff');
   console.log(req.body);
-  console.log(req.body[0].topic);
-  for(var i = 0; i < req.body.length; i++)
-  {
-    var a = req.body[i];
-    console.log(a);
-    db.insert({ question: a.question, project: req.params.projectname, answer: a.answer, type:"answer"});
-  }
+  db.insert(req.body);
+  
   res.send();
 });
 
