@@ -202,6 +202,7 @@ app.post('/futufeedback/:projectname', function(req, res) {
 });
 
 app.get('/futufeedback/', function(req, res) {
+console.log(req);
   res.set('Content-Type', 'application/json');
   db.view('questions', 'by_type', {keys: ['question']}, function(err, body) {
     if (!err) {
