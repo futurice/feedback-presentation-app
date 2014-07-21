@@ -1,9 +1,6 @@
 // web.js
 var express = require("express");
-var bodyParser = require('body-parser')
-var mapreduce = require('./mapreduce');
-
-
+var bodyParser = require('body-parser');
 
 var logfmt = require("logfmt");
 var nano = require('nano')('http://localhost:5984');
@@ -38,6 +35,10 @@ function migration()
     db.insert({ question: "What?", project: "jokuprokkis", topic: 'Design', answer: "3", type:"answer"});
     db.insert({ question: "What?", project: "jokuprokkis", topic: 'Development', answer: "2", type:"answer"});
 
+    db.insert({ question: "What?", project: "jp2", topic: 'Design', answer: "3", type:"answer"});
+    db.insert({ question: "Where?", project: "jp2", topic: 'Design', answer: "2", type:"answer"});
+    db.insert({ question: "What?", project: "jp2", topic: 'Design', answer: "3", type:"answer"});
+    db.insert({ question: "What?", project: "jp2", topic: 'Development', answer: "2", type:"answer"});
 
   }
   // clean up the database we created previously
@@ -59,6 +60,16 @@ function migration()
           if(doc.type)
           {
             emit(doc.type, doc);
+          }
+        }
+      },
+        "project_names": 
+        {  "map": 
+        function(doc)
+        {
+          if(doc.type && doc.type == 'answer')
+          {
+            emit(doc.project, doc.project);
           }
         }
       },
@@ -153,13 +164,28 @@ insertbsdata(db);
 
 migration();
 
-app.get('/projects/', function(req, res) {
-  res.set('Content-Type', 'application/json');
-  var project_names = ['Finavia', 'Sanoma', 'SATO', 'feedbackapp!'];
-  res.send(JSON.stringify(project_names));
+app.get('/api/projects', function(req, res) {
+  db.view('questions', 'project_names', {reduce:false}, function(err, body) {
+    if (!err) {
+      console.log(body);
+        var results = [];
+        for (var i = 0; i < body.rows.length; i++) {
+	if(results.indexOf(body.rows[i].value) < 0)
+	{
+          results.push(body.rows[i].value);
+	}
+        }
+      res.send(JSON.stringify(results));
+    }
+    else 
+    {
+      console.log(err);
+      res.send(404);
+    }
+  });
 });
 
-app.get('/projects/:projectname/avg/', function(req, res) {
+app.get('/api/projects/:projectname/avg/', function(req, res) {
   db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:true, group:true}, function(err, body) {
     if (!err) {
       console.log(body.rows[0].value);
@@ -173,7 +199,7 @@ app.get('/projects/:projectname/avg/', function(req, res) {
   });
 });
 
-app.get('/projects/:projectname/all/', function(req, res) {
+app.get('/api/projects/:projectname/all/', function(req, res) {
   db.view('questions', 'answers_by_project', {keys: [req.params.projectname], reduce:false}, function(err, body) {
     if (!err) {
       var questionlist = body.rows.map(
@@ -188,7 +214,7 @@ app.get('/projects/:projectname/all/', function(req, res) {
   });
 });
 
-app.post('/futufeedback/:projectname', function(req, res) {
+app.post('/api/futufeedback/:projectname', function(req, res) {
   console.log('posting stuff');
   console.log(req.body);
   db.insert(req.body);
@@ -196,7 +222,7 @@ app.post('/futufeedback/:projectname', function(req, res) {
   res.send();
 });
 
-app.get('/futufeedback/', function(req, res) {
+app.get('/api/futufeedback/', function(req, res) {
 console.log(req);
   res.set('Content-Type', 'application/json');
   db.view('questions', 'by_type', {keys: ['question']}, function(err, body) {
@@ -218,6 +244,8 @@ res.set('Content-Type', 'application/json');
   res.send('{"futuFeedbackItems":[{"topic":"Design","question":"Koska"},{"topic":"Design","question":"Miksi"},{"topic":"Design","question":"Why"},{"topic":"Development","question":"Koska"},{"topic":"Development","question":"Miksi"},{"topic":"Development","question":"Why"}]}');
 });
 */
+app.use(express.static(__dirname));
+
 var port = Number(process.env.PORT || 8001);
 app.listen(port, function() {
   console.log("Listening on " + port);
