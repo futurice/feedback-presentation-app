@@ -48,15 +48,6 @@
         color: #222;
       }
 
-      .section-box {
-        display: block;
-        background-color: #fff;
-        padding: 10px;
-        margin: 10px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0px 2px 5px rgba(0,0,0, .3);
-      }
       /* Main view's header bar */
       core-scaffold::shadow core-toolbar {
         background-color: #689f38;
@@ -118,7 +109,7 @@
     <div horizontal layout>
 
     <div vertical layout class="section-box">
-      <template repeat="{{ q in selectedProject.value }}">
+      <template repeat="{{ q in selectedProject.value.questions }}">
       <div horizontal layout>
         <paper-item label={{q.question}}></paper-item>
         <paper-item label={{q.answer}}></paper-item>
@@ -127,7 +118,7 @@
     </div>
     <div vertical layout class="section-box">
         <paper-item label="NPA SCORE"></paper-item>
-        <paper-item label={{q.npa_score}}></paper-item>
+        <paper-item label={{selectedProject.value.npa_score}}></paper-item>
     </div>
     </div>
 	</section>

@@ -54,9 +54,9 @@ function migration()
         {  "map": 
         function(doc)
         {
-          if(doc.project_name && doc.questions)
+          if(doc.project_name)
           {
-            emit(doc.project_name, doc.questions);
+            emit(doc.project_name, doc);
           }
         }
       },
@@ -149,7 +149,7 @@ insertbsdata(db);
 });
 }
 
-//:migration();
+//migration();
 
 app.get('/api/projects', function(req, res) {
   db.view('questions', 'projects', {reduce:false}, function(err, body) {
