@@ -107,7 +107,7 @@
   <section>
   <header>
   </header>
-  <x-project-answer-list project="{{selectedProject}}"></x-project-answer-list>
+  <x-project-answer-list hidden?="{{ selectedProject == null }}" project="{{selectedProject}}"></x-project-answer-list>
 	</section>
 
 
@@ -115,7 +115,7 @@
   </template>
   <script>
   Polymer('x-app', {
-    selectedProject: {},
+    selectedProject: null,
     handleItemTap: function(event, detail, sender) {
       this.selectProject(sender.templateInstance.model.p);
     },

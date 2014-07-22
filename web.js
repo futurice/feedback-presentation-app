@@ -94,10 +94,15 @@ function migration()
       "map": 
       function(doc)
       {
-        if(doc.type && doc.type == 'answer' && doc.question)
-        {
-          emit(doc.question, doc.answer);
-        }
+      if(doc.questions)
+      {
+	      for(var i = 0; i < doc.questions.length; i++)
+	      {
+			var question = doc.questions[i];
+		      emit(question.question, question.answer);
+
+	      }
+      }
       },
       "reduce":
       function(key, values, rereduce) {
@@ -105,7 +110,7 @@ function migration()
         if (!rereduce){
           values = values.map(function(elem)
           {
-            return parseFloat(elem.answer);
+            return parseFloat(elem);
           }
           );
           var length = values.length
@@ -170,6 +175,20 @@ app.get('/api/projects/:projectname/avg/', function(req, res) {
     if (!err) {
       console.log(body.rows[0].value);
       res.send(JSON.stringify(body.rows[0].value[0]));
+    }
+    else 
+    {
+      console.log(err);
+      res.send(404);
+    }
+  });
+});
+
+app.get('/api/questions/', function(req, res) {
+  db.view('questions', 'answers_by_question', {reduce:true , group:true}, function(err, body) {
+    if (!err) {
+      console.log(body.rows);
+      res.send(JSON.stringify(body.rows));
     }
     else 
     {
