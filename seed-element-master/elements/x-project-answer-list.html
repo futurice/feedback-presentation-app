@@ -6,9 +6,7 @@
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
-<link rel="import" href="/seed-element-master/elements/x-project-service.html">
-
-<polymer-element name="x-app">
+<polymer-element name="x-project-answer-list">
   <template>
     <style>
       /*
@@ -48,15 +46,6 @@
         color: #222;
       }
 
-      .section-box {
-        display: block;
-        background-color: #fff;
-        padding: 10px;
-        margin: 10px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0px 2px 5px rgba(0,0,0, .3);
-      }
       /* Main view's header bar */
       core-scaffold::shadow core-toolbar {
         background-color: #689f38;
@@ -103,33 +92,20 @@
       <core-header-panel class="panel--menu" navigation flex mode="waterfall">
         <core-toolbar >FUTUFEEDBACK</core-toolbar>
         <core-menu theme="core-light-theme" selected="0">
-        <core-submenu active label="Projects" valueattr="name" id="core_submenu">
+	<core-submenu active label="Projects" valueattr="name" id="core_submenu">
           <template repeat="{{ p in projects }}">
-            <core-item label="{{ p.key }}" on-tap="{{ handleItemTap }}"></core-item>
+            <core-item label="{{ p }}" on-tap="{{ handleItemTap }}"></paper-item>
           </template>
           </core-submenu>
-          <core-item label="Questions" on-tap="{{ questionsTap }}"></core-item>
+	  <core-item label="Questions" on-tap="{{ questionsTap }}"></paper-item>
         </core-menu>
 	</core-header-panel>
-  <div tool> {{selectedProject.key}} </div>
+
   <section>
   <header>
+  <h1>BS</h1>
   </header>
-    <div horizontal layout>
 
-    <div vertical layout class="section-box">
-      <template repeat="{{ q in selectedProject.value }}">
-      <div horizontal layout>
-        <paper-item label={{q.question}}></paper-item>
-        <paper-item label={{q.answer}}></paper-item>
-      </div>
-      </template>
-    </div>
-    <div vertical layout class="section-box">
-        <paper-item label="NPA SCORE"></paper-item>
-        <paper-item label={{q.npa_score}}></paper-item>
-    </div>
-    </div>
 	</section>
 
 
@@ -137,16 +113,16 @@
   </template>
   <script>
   Polymer('x-app', {
-    selectedProject: {},
     handleItemTap: function(event, detail, sender) {
-      this.selectProject(sender.templateInstance.model.p);
+      this.selectTribe(sender.templateInstance.model.t);
     },
     questionsTap: function(event, detail, sender) {
 	//handle questions tap
     },
-    selectProject: function(project) {
-      this.selectedProject = project;
-      console.log("Selected tribe: " + project.key);
+    selectTribe: function(tribe) {
+      this.tribe.name = tribe.name;
+      this.tribe.prettyName = tribe.prettyName;
+      console.log("Selected tribe: " + this.tribe.name);
     },
     ready: function(){
     }

@@ -11,6 +11,7 @@ var db;
 app.use(logfmt.requestLogger());
 app.use(bodyParser.json());
 
+db = nano.use('futufeedback');
 
 //MIGRATION
 
@@ -18,28 +19,14 @@ function migration()
 {
   function insertbsdata(db)
   {
-
-    db.insert({ question: "Why?", topic: "Development", type:"question"});
-    db.insert({ question: "What?", topic: "Design", type:"question"});
-    db.insert({ question: "What?", topic: "Design", type:"question"});
-    db.insert({ question: "What?", topic: "Design", type:"question"});
-    db.insert({ question: "Where?", topic: "Development", type:"question"});
-    db.insert({ question: "When?", topic: "Design", type:"question"});
-    db.insert({ question: "What?", topic: "Design", type:"question"});
-    db.insert({ question: "What?", topic: "Design", type:"question"});
-    db.insert({ question: "What?", topic: "Communication", type:"question"});
-    db.insert({ question: "What?", topic: "Communication", type:"question"});
-
-    db.insert({ question: "What?", project: "jokuprokkis", topic: 'Design', answer: "3", type:"answer"});
-    db.insert({ question: "Where?", project: "jokuprokkis", topic: 'Design', answer: "2", type:"answer"});
-    db.insert({ question: "What?", project: "jokuprokkis", topic: 'Design', answer: "3", type:"answer"});
-    db.insert({ question: "What?", project: "jokuprokkis", topic: 'Development', answer: "2", type:"answer"});
-
-    db.insert({ question: "What?", project: "jp2", topic: 'Design', answer: "3", type:"answer"});
-    db.insert({ question: "Where?", project: "jp2", topic: 'Design', answer: "2", type:"answer"});
-    db.insert({ question: "What?", project: "jp2", topic: 'Design', answer: "3", type:"answer"});
-    db.insert({ question: "What?", project: "jp2", topic: 'Development', answer: "2", type:"answer"});
-
+    db.insert({ question: "Rate the quality and timeliness of the project delivery", topic: "Management", type:"question"});
+    db.insert({ question: "Rate the quality of the design work in the project", topic: "Design", type:"question"});
+    db.insert({ question: "Rate the quality of the developers in the project", topic: "Development", type:"question"});
+    db.insert({ question: "Rate the return of investment from the project", topic: "Business", type:"question"});
+    db.insert({ question: "Rate the project team work and chemistry with yourself", topic: "Communication", type:"question"});
+    db.insert({ question: "Rate the trust and transparency during the project", topic: "Communication", type:"question"});
+    db.insert({ question: "Rate the amount of care the project team showed in your business", topic: "Business", type:"question"});
+    db.insert({ question: "Rate the way the project team has changed the way of working and thinking", topic: "Insight", type:"question"});
   }
   // clean up the database we created previously
   console.log('clean db')
@@ -63,13 +50,13 @@ function migration()
           }
         }
       },
-        "project_names": 
+        "projects": 
         {  "map": 
         function(doc)
         {
-          if(doc.type && doc.type == 'answer')
+          if(doc.project_name && doc.questions)
           {
-            emit(doc.project, doc.project);
+            emit(doc.project_name, doc.questions);
           }
         }
       },
@@ -162,20 +149,13 @@ insertbsdata(db);
 });
 }
 
-migration();
+//:migration();
 
 app.get('/api/projects', function(req, res) {
-  db.view('questions', 'project_names', {reduce:false}, function(err, body) {
+  db.view('questions', 'projects', {reduce:false}, function(err, body) {
     if (!err) {
       console.log(body);
-        var results = [];
-        for (var i = 0; i < body.rows.length; i++) {
-	if(results.indexOf(body.rows[i].value) < 0)
-	{
-          results.push(body.rows[i].value);
-	}
-        }
-      res.send(JSON.stringify(results));
+      res.send(JSON.stringify(body.rows));
     }
     else 
     {
