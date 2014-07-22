@@ -184,7 +184,7 @@ app.get('/api/projects/:projectname/avg/', function(req, res) {
   });
 });
 
-app.get('/api/questions/', function(req, res) {
+app.get('/api/questions', function(req, res) {
   db.view('questions', 'answers_by_question', {reduce:true , group:true}, function(err, body) {
     if (!err) {
       console.log(body.rows);
