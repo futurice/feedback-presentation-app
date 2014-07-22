@@ -6,7 +6,7 @@
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
-<polymer-element name="x-project-answer-list">
+<polymer-element name="x-project-answer-list" attributes="project">
   <template>
     <style>
       /*
@@ -47,40 +47,6 @@
         box-shadow: 0px 2px 5px rgba(0,0,0, .3);
       }
 
-      core-scaffold {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        color: #222;
-      }
-
-      /* Main view's header bar */
-      core-scaffold::shadow core-toolbar {
-        background-color: #689f38;
-        color: #fff;
-      }
-
-      /* Main view's background */
-      core-scaffold::shadow [main] {
-        background-color: #fafafa;
-      }
-
-      /* Menu panel's header bar */
-      .panel--menu::shadow #mainPanel, .panel--menu core-toolbar {
-        background-color: #fff;
-      }
-
-      /* Menu panel */
-      .panel--menu {
-        background-color: #fff;
-      }
-
-      core-scaffold .panel--menu /deep/ core-menu {
-        margin: 0;
-      }
-
       paper-item.core-selected {
         background-color: #dcedc8;
       }
@@ -95,45 +61,24 @@
       }
     </style>
 
-    <core-scaffold>
+    <div horizontal layout>
 
-      <x-project-service id="service" projects="{{ projects }}"></x-project-service>
-
-      <core-header-panel class="panel--menu" navigation flex mode="waterfall">
-        <core-toolbar >FUTUFEEDBACK</core-toolbar>
-        <core-menu theme="core-light-theme" selected="0">
-	<core-submenu active label="Projects" valueattr="name" id="core_submenu">
-          <template repeat="{{ p in projects }}">
-            <core-item label="{{ p }}" on-tap="{{ handleItemTap }}"></paper-item>
-          </template>
-          </core-submenu>
-	  <core-item label="Questions" on-tap="{{ questionsTap }}"></paper-item>
-        </core-menu>
-	</core-header-panel>
-
-  <section>
-  <header>
-  <h1>BS</h1>
-  </header>
-
-	</section>
-
-
-    </core-scaffold>
+    <div vertical layout class="section-box">
+      <template repeat="{{ q in project.value.questions }}">
+      <div horizontal layout>
+        <paper-item label={{q.question}}></paper-item>
+        <paper-item label={{q.answer}}></paper-item>
+      </div>
+      </template>
+    </div>
+    <div vertical layout class="section-box">
+        <paper-item label="NPA SCORE"></paper-item>
+        <paper-item label={{project.value.npa_score}}></paper-item>
+    </div>
+    </div>
   </template>
   <script>
-  Polymer('x-app', {
-    handleItemTap: function(event, detail, sender) {
-      this.selectTribe(sender.templateInstance.model.t);
-    },
-    questionsTap: function(event, detail, sender) {
-	//handle questions tap
-    },
-    selectTribe: function(tribe) {
-      this.tribe.name = tribe.name;
-      this.tribe.prettyName = tribe.prettyName;
-      console.log("Selected tribe: " + this.tribe.name);
-    },
+  Polymer('x-project-answer-list', {
     ready: function(){
     }
   });

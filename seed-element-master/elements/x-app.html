@@ -7,6 +7,7 @@
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="/seed-element-master/elements/x-project-service.html">
+<link rel="import" href="/seed-element-master/elements/x-project-answer-list.html">
 
 <polymer-element name="x-app">
   <template>
@@ -106,21 +107,7 @@
   <section>
   <header>
   </header>
-    <div horizontal layout>
-
-    <div vertical layout class="section-box">
-      <template repeat="{{ q in selectedProject.value.questions }}">
-      <div horizontal layout>
-        <paper-item label={{q.question}}></paper-item>
-        <paper-item label={{q.answer}}></paper-item>
-      </div>
-      </template>
-    </div>
-    <div vertical layout class="section-box">
-        <paper-item label="NPA SCORE"></paper-item>
-        <paper-item label={{selectedProject.value.npa_score}}></paper-item>
-    </div>
-    </div>
+  <x-project-answer-list project="{{selectedProject}}"></x-project-answer-list>
 	</section>
 
 
