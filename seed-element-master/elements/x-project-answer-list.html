@@ -61,19 +61,21 @@
       }
     </style>
 
-    <div horizontal layout>
+    <div vertical layout>
+    <div horizontal flex layout>
 
-    <div vertical layout class="section-box">
+    <div vertical flex layout class="section-box">
       <template repeat="{{ q in project.value.questions }}">
-      <div horizontal layout>
+      <div horizontal justified layout >
         <paper-item label={{q.question}}></paper-item>
-        <paper-item label={{q.answer}}></paper-item>
+        <paper-item text-align="right" label={{q.answer}}></paper-item>
       </div>
       </template>
     </div>
-    <div vertical layout class="section-box">
+    <div vertical flex justified layout class="section-box">
         <paper-item label="NPA SCORE"></paper-item>
         <paper-item label={{project.value.npa_score}}></paper-item>
+    </div>
     </div>
     <div vertical layout class="section-box">
         <paper-item label="Comment"></paper-item>

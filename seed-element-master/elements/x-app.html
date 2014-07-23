@@ -82,12 +82,6 @@
       paper-item::shadow #ripple {
         color: #8bc34a;
       }
-
-
-      .card-grid {
-        display: flex;
-        flex-wrap: wrap;
-      }
     </style>
 
     <core-scaffold>
@@ -96,17 +90,18 @@
       <x-questions-service id="qservice" questions="{{ questions }}"></x-questions-service>
 
       <core-header-panel class="panel--menu" navigation flex mode="waterfall">
-        <core-toolbar >FUTUFEEDBACK</core-toolbar>
+        <core-toolbar >Futurice Feedback</core-toolbar>
         <core-menu theme="core-light-theme" selected="0">
-        <core-submenu active label="Projects" valueattr="name" id="core_submenu">
+        <core-submenu active label="Projects" icon="work" valueattr="name" id="core_submenu">
           <template repeat="{{ p in projects }}">
             <core-item label="{{ p.key }}" on-tap="{{ handleItemTap }}"></core-item>
           </template>
           </core-submenu>
-          <core-item label="Questions" on-tap="{{ questionsTap }}"></core-item>
+          <core-item icon="star" label="Questions" on-tap="{{ questionsTap }}"></core-item>
         </core-menu>
 	</core-header-panel>
-  <div tool> {{selectedProject.key}} </div>
+  <div tool hidden?="{{ selectedProject == null }}"> {{selectedProject.key}} </div>
+  <div tool hidden?="{{ !questionsSelected }}"> Question averages </div>
   <section>
   <header>
   </header>
