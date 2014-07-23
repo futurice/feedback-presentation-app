@@ -17,14 +17,20 @@
       :host {
         display: block;
       }
-
-      core-scaffold {
+     #core_toolbar {
+        text-align: center;
+        z-index: 1;
+        color: rgb(255, 255, 255);
+        fill: rgb(255, 255, 255);
+        background-color: rgb(79, 125, 201);
+        opacity: 0.9;
+      }
+      #root-grid {
         position: absolute;
         top: 0;
         right: 0;
         bottom: 0;
         left: 0;
-        color: #222;
       }
 
       /* Main view's header bar */
@@ -60,30 +66,21 @@
       }
     </style>
 
-    <core-scaffold>
 
       <x-project-service id="service" projects="{{ projects }}"></x-project-service>
       <x-questions-service id="qservice" questions="{{ questions }}"></x-questions-service>
 
-      <core-header-panel class="panel--menu" navigation flex mode="waterfall">
-        <core-toolbar >Futurice Feedback</core-toolbar>
-        <core-menu theme="core-light-theme" selected="0">
-        <core-submenu active label="Projects" icon="work" valueattr="name" id="core_submenu">
-          <template repeat="{{ p in projects }}">
-            <core-item label="{{ p.key }}" on-tap="{{ handleItemTap }}"></core-item>
-          </template>
-          </core-submenu>
-          <core-item icon="star" label="Questions" on-tap="{{ questionsTap }}"></core-item>
-        </core-menu>
-	</core-header-panel>
-  <div tool hidden?="{{ selectedProject == null }}"> {{selectedProject.key}} </div>
-  <div tool hidden?="{{ !questionsSelected }}"> Question averages </div>
-  <section>
-  <header>
-  </header>
-  <x-project-answer-list hidden?="{{ selectedProject == null }}" project="{{selectedProject}}"></x-project-answer-list>
-  <x-question-list hidden?="{{ !questionsSelected }}" questions="{{questions}}"></x-project-answer-list>
-	</section>
+      <div vertical flex layout id="root-grid">
+        <core-toolbar id="core_toolbar">
+          <div vertical flex layout>
+          <div flex layout>Futurice Feedback</div>
+          <div flex layout>Out latest 5 feedbacks from various projects</div>
+          </div>
+        </core-toolbar>
+        <section>
+        <x-project-answer-list projects="{{projects}}"></x-project-answer-list>
+        </section>
+      </div>
 
 
     </core-scaffold>
