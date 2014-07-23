@@ -89,6 +89,36 @@ function migration()
         }
       }
     },
+    "npa_scores": 
+    {  
+      "map": 
+      function(doc)
+      {
+      if(doc.npa_score)
+      {
+	emit(doc.project, doc.npa_score);
+      }
+      },
+      "reduce":
+      function(key, values, rereduce) {
+
+        if (!rereduce){
+          values = values.map(function(elem)
+          {
+            return parseFloat(elem);
+          }
+          );
+          var length = values.length
+          return [sum(values) / length, length]
+        }else{
+          var length = sum(values.map(function(v){return v[1]}))
+          var avg = sum(values.map(function(v){
+            return v[0] * (v[1] / length)
+          }))
+          return [avg, length]
+        }
+      }
+    },
     "answers_by_question": 
     {  
       "map": 
@@ -185,10 +215,24 @@ app.get('/api/projects/:projectname/avg/', function(req, res) {
 });
 
 app.get('/api/questions', function(req, res) {
+var response = {};
   db.view('questions', 'answers_by_question', {reduce:true , group:true}, function(err, body) {
     if (!err) {
-      console.log(body.rows);
-      res.send(JSON.stringify(body.rows));
+      response.questions = body.rows;
+			console.log(response);
+			db.view('questions', 'npa_scores', {reduce:true , group:true}, function(err, body) {
+							if (!err) {
+							console.log(body.rows);
+							response.npa_score = body.rows[0].value[0];
+							console.log(response);
+							res.send(JSON.stringify(response));
+							}
+							else 
+							{
+							console.log(err);
+							res.send(404);
+							}
+							});
     }
     else 
     {

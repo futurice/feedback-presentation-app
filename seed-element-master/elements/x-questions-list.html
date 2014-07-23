@@ -67,14 +67,20 @@
       }
     </style>
 
-
+    <div vertical layout>
     <div vertical layout class="section-box">
-      <template repeat="{{ q in questions }}">
+      <div><h3>Star rated</h3></div>
+      <template repeat="{{ q in questions.questions }}">
       <div horizontal justified layout>
         <div>{{q.key}}</div>
         <div class="star-answer">{{q.value[0]}}</div>
       </div>
       </template>
+    </div>
+    <div vertical layout class="section-box">
+      <div><h3>NPA score</h3></div>
+      <div class="star-answer" font-size="60px">{{questions.npa_score}}/10</div>
+    </div>
     </div>
   </template>
   <script>
