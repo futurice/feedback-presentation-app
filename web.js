@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 
 var logfmt = require("logfmt");
 var nano = require('nano')('http://localhost:5984');
+var salesforce = require('./salesforce_conn.js');
 var app = express();
 
 var db;
@@ -281,6 +282,7 @@ console.log(req);
   });
 });
 
+salesforce.getSalesforceData();
 /*
 app.get('/', function(req, res) {
 res.set('Content-Type', 'application/json');
