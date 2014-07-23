@@ -186,6 +186,9 @@ insertbsdata(db);
 }
 
 //migration();
+app.get('/api/opportunities', function(req, res) {
+				res.send(JSON.stringify(salesforce.getSalesforceData()));
+});
 
 app.get('/api/projects', function(req, res) {
   db.view('questions', 'projects', {reduce:false}, function(err, body) {
@@ -282,7 +285,6 @@ console.log(req);
   });
 });
 
-salesforce.getSalesforceData();
 /*
 app.get('/', function(req, res) {
 res.set('Content-Type', 'application/json');

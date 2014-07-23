@@ -42,12 +42,9 @@ exports.getSalesforceData = function() {
 
   console.log("Querying Salesforce.");
 
-  conn.query('SELECT Id, Name, Account.Name, Account.Id, '+
-    'Owner.Name, Owner.Id, Owner.Alias, Description, Amount, CloseDate, '+
-    'Probability, StageName, IsClosed, IsWon, '+
-    'Budgeted_Work_End_Date__c, Budgeted_Work_Start_Date__c, Average_Hour_Price__c, '+
-    'Type, Futu_Team__c, LastModifiedDate, CreatedDate '+
-    'FROM Opportunity WHERE CloseDate > ' + date,
+  conn.query('SELECT Name, Account.Name, '+
+    'Owner.Name, Futu_Team__c '+
+    'FROM Opportunity WHERE IsWon = true AND IsClosed = true',
     function(err, res) {
       if (err) { return console.error(err); }
 
@@ -56,9 +53,8 @@ exports.getSalesforceData = function() {
 
       // "Describe" in API:
       // https://eu1.salesforce.com/services/data/v30.0/sobjects/Opportunity/describe
-
-      console.log('Done: ' + JSON.stringify(res));
-      console.log("Fetched Opportunities from Salesforce.");
+      console.log(JSON.stringify(res.records));
+      return res.records;
     });
   });
 };
