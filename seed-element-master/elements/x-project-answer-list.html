@@ -54,32 +54,59 @@
         color: #8bc34a;
       }
 
+      .list-item
+      {
 
-      .card-grid {
-        display: flex;
-        flex-wrap: wrap;
       }
+
+      .star-answer
+      {
+        margin: 10px;
+        color: #8bc34a;
+        text-align: right;
+      }
+
+      #npa-item
+      {
+        color: #8bc34a;
+        font-size:120px;
+        text-align:right;
+      }
+
     </style>
 
     <div vertical layout>
     <div horizontal flex layout>
 
     <div vertical flex layout class="section-box">
+      <div><h3>Customer company</h3></div>
+      <div>{{project.value.customer_company}}</div>
+    </div>
+    <div vertical flex layout class="section-box">
+      <div><h3>Customer contact</h3></div>
+      <div>{{project.value.customer_contact}}</div>
+    </div>
+    </div>
+
+    <div horizontal flex layout>
+
+    <div vertical flex layout class="section-box">
+      <div><h3>Questions</h3></div>
       <template repeat="{{ q in project.value.questions }}">
-      <div horizontal justified layout >
-        <paper-item label={{q.question}}></paper-item>
-        <paper-item text-align="right" label={{q.answer}}></paper-item>
+      <div horizontal justified layout margin="10" >
+        <div>{{q.question}}</div>
+        <div class="star-answer">{{q.answer}}</div>
       </div>
       </template>
     </div>
     <div vertical flex justified layout class="section-box">
-        <paper-item label="NPA SCORE"></paper-item>
-        <paper-item label={{project.value.npa_score}}></paper-item>
+        <div><h3>NPA score<h3></div>
+        <div id="npa-item">{{project.value.npa_score}}/10</div>
     </div>
     </div>
     <div vertical layout class="section-box">
-        <paper-item label="Comment"></paper-item>
-        <paper-item label={{project.value.comment}}></paper-item>
+        <div><h3>Comment<h3></div>
+        <div> {{project.value.comment}}</div>
     </div>
     </div>
   </template>

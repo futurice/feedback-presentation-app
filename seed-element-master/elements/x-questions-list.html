@@ -54,6 +54,12 @@
         color: #8bc34a;
       }
 
+      .star-answer
+      {
+        margin: 10px;
+        color: #8bc34a;
+        text-align: right;
+      }
 
       .card-grid {
         display: flex;
@@ -64,9 +70,9 @@
 
     <div vertical layout class="section-box">
       <template repeat="{{ q in questions }}">
-      <div horizontal layout>
-        <paper-item label={{q.key}}></paper-item>
-        <paper-item label={{q.value[0]}}></paper-item>
+      <div horizontal justified layout>
+        <div>{{q.key}}</div>
+        <div class="star-answer">{{q.value[0]}}</div>
       </div>
       </template>
     </div>

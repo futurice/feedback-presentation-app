@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>&lt;star-rating&gt;</title>
+
+    <!-- Importing Web Component's Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <!-- Importing Custom Elements -->
+    <link rel="import" href="src/star-rating.html">
+</head>
+<body>
+
+    <!-- Using Custom Elements -->
+    <div>
+        <star-rating></star-rating>
+        <span class="count"></span>
+    </div>
+
+    <div>
+        <star-rating votes="3" votesSum="3" starCount="10"></star-rating>
+        <span class="count"></span>
+    </div>
+
+    <div>
+        <star-rating votes="3" votesSum="3" starCount="10" readyOnly="true"></star-rating>
+        <span class="count"></span>
+    </div>
+
+    <script>
+    var starRatings = document.querySelectorAll('star-rating');
+
+    for ( var i = 0; i < starRatings.length; i++ ) {
+        starRatings[i].addEventListener('rate', function(e){
+            this.parentNode.lastElementChild.innerHTML = this.votes + ' people voted and the sum is ' + this.votesSum;
+        });
+    }
+    </script>
+
+</body>
+</html>
