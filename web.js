@@ -187,7 +187,11 @@ insertbsdata(db);
 
 //migration();
 app.get('/api/opportunities', function(req, res) {
-				res.send(JSON.stringify(salesforce.getSalesforceData()));
+		salesforce.getSalesforceData(function(data)
+		{
+		res.set('Content-Type', 'application/json');
+			res.send(JSON.stringify(data));
+		});
 });
 
 app.get('/api/projects', function(req, res) {

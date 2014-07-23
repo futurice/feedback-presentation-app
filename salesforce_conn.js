@@ -17,7 +17,7 @@ zeropad = function(number, length){
 
 };    
 
-exports.getSalesforceData = function() {
+exports.getSalesforceData = function(callback) {
 
   console.log("Running update on ", new Date());
 
@@ -53,8 +53,15 @@ exports.getSalesforceData = function() {
 
       // "Describe" in API:
       // https://eu1.salesforce.com/services/data/v30.0/sobjects/Opportunity/describe
-      console.log(JSON.stringify(res.records));
-      return res.records;
+      var cleaned = [];
+      for(var i = 0; i < res.records.length; i ++)
+      {
+        cleaned[i] = {project_name: res.records[i].Name , owner_name: res.records[i].Owner.Name, company_name: res.records[i].Account.Name
+        };
+        
+      }
+      console.log(JSON.stringify(cleaned));
+      callback(cleaned) ;
     });
   });
 };
