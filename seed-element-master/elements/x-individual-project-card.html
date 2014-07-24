@@ -6,7 +6,7 @@
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
-<polymer-element name="x-individual-project-card" attributes="project">
+<polymer-element name="x-individual-project-card" attributes="project background selected">
   <template>
     <style>
       /*
@@ -36,6 +36,7 @@
       :host {
         position: relative;
         background-color: #8bc34a;
+        color: rgb(255, 255, 255);
       }
 
 
@@ -68,9 +69,17 @@
       }
 
     </style>
-      <div vertical layout justified center relative fit>
+      <div vertical layout justified center relative fit style="background-color: {{background}}">
         <div></div>
         <div>{{project.key}}</div>
+        <div vertical layout hidden?={{!selected}}>
+          <template repeat="{{ q in project.value.questions }}">
+            <div horizontal justified layout>
+            <div>{{q.question}}</div>
+            <div>{{q.answer}}</div>
+            </div>
+          </template>
+        </div>
         <div>{{project.value.customer_contact}}</div>
       </div>
   </template>

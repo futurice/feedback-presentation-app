@@ -77,13 +77,33 @@
     </style>
 
     <div horizontal flex justify layout>
-      <template repeat="{{ p in projects }}">
-        <x-individual-project-card flex project={{p}}></x-individual-project-card>
+      <template repeat="{{ p, pIndex in projects }}">
+        <x-individual-project-card flex project={{p}} background={{backgrounds[pIndex]}} on-tap={{card_tap}}></x-individual-project-card>
       </template>
+      <div flex style="background-color: {{backgrounds[5]}}"></div>
       </div>
   </template>
   <script>
   Polymer('x-project-answer-list', {
+    selectedCard: null,
+    backgrounds: ['#6bc177', '#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
+    card_tap: function(event, detail, sender)
+    {
+       if(this.selectedCard != null)
+        this.unselect_card(this.selectedCard);
+      this.selectedCard = sender;
+      this.select_card(sender);  
+    },
+    unselect_card: function(card)
+    {
+      card.removeAttribute('two');
+      card.selected = false;
+    },
+    select_card: function(card)
+    {
+      card.setAttribute('two', '');
+      card.selected = true;
+    },
     ready: function(){
     }
   });
