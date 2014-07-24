@@ -34,15 +34,14 @@
       */
 
       :host {
-        display: block;
         position: relative;
+        background-color: #8bc34a;
       }
 
 
       #project-section
       {
         text-align:center;
-        background-color: #8bc34a;
       
       }
 
@@ -69,8 +68,7 @@
       }
 
     </style>
-
-      <div vertical flex justified layout id="project-section">
+      <div vertical layout justified center relative fit>
         <div></div>
         <div>{{project.key}}</div>
         <div>{{project.value.customer_contact}}</div>

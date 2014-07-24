@@ -70,16 +70,16 @@
       <x-project-service id="service" projects="{{ projects }}"></x-project-service>
       <x-questions-service id="qservice" questions="{{ questions }}"></x-questions-service>
 
-      <div vertical flex layout id="root-grid">
+      <div flex id="root-grid">
         <core-toolbar id="core_toolbar">
           <div vertical flex layout>
           <div flex layout>Futurice Feedback</div>
           <div flex layout>Out latest 5 feedbacks from various projects</div>
           </div>
         </core-toolbar>
-        <section>
-        <x-project-answer-list projects="{{projects}}"></x-project-answer-list>
-        </section>
+        <div horizontal layout relative fit>
+        <x-project-answer-list flex center projects="{{projects}}"></x-project-answer-list>
+        </div>
       </div>
 
 

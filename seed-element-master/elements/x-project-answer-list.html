@@ -76,11 +76,9 @@
 
     </style>
 
-    <div horizontal justify layout>
+    <div horizontal flex justify layout>
       <template repeat="{{ p in projects }}">
-        <div flex layout>
-        <x-individual-project-card project={{p}}></x-individual-project-card>
-        </div>
+        <x-individual-project-card flex project={{p}}></x-individual-project-card>
       </template>
       </div>
   </template>
