@@ -6,6 +6,7 @@
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
+<link rel="import" href="/seed-element-master/elements/x-sidebar-menu.html">
 <link rel="import" href="/seed-element-master/elements/x-project-service.html">
 <link rel="import" href="/seed-element-master/elements/x-questions-service.html">
 <link rel="import" href="/seed-element-master/elements/x-project-answer-list.html">
@@ -24,7 +25,7 @@
         z-index: 1;
         color: rgb(255, 255, 255);
         fill: rgb(255, 255, 255);
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(0, 0, 0, 0.2);
       }
       #root-grid {
         position: absolute;
@@ -73,13 +74,15 @@
 
       <div flex id="root-grid">
         <core-toolbar id="core_toolbar">
+          <core-icon-button icon="menu" on-tap={{menu_button_tap}}></core-icon-button>
           <div vertical flex layout>
-          <div flex layout>Futurice Feedback</div>
-          <div flex layout>Out latest 5 feedbacks from various projects</div>
+          <div flex layout>Feedback</div>
+          <div flex layout>Our latest 5 feedbacks from various projects</div>
           </div>
         </core-toolbar>
         <div horizontal layout relative fit>
-        <x-project-answer-list flex center projects="{{projects}}"></x-project-answer-list>
+        <x-sidebar-menu flex center hidden?={{menuHidden}}></x-sidebar-menu>
+        <x-project-answer-list flex three center projects="{{projects}}"></x-project-answer-list>
         </div>
       </div>
 
@@ -88,8 +91,12 @@
   </template>
   <script>
   Polymer('x-app', {
+    menuHidden: false,
     selectedProject: null,
     questionsSelected: false,
+    menu_button_tap: function(event, detail, sender) {
+      this.menuHidden = !this.menuHidden;
+    },
     handleItemTap: function(event, detail, sender) {
       this.selectProject(sender.templateInstance.model.p);
     },
