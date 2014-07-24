@@ -82,7 +82,7 @@
         </core-toolbar>
         <div horizontal layout relative fit>
         <x-sidebar-menu flex center hidden?={{menuHidden}}></x-sidebar-menu>
-        <x-project-answer-list flex three center projects="{{projects}}"></x-project-answer-list>
+        <x-project-answer-list flex three center projects="{{projects}}" count="{{nProjectsVisible}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
         </div>
       </div>
 
@@ -93,6 +93,8 @@
   Polymer('x-app', {
     menuHidden: false,
     selectedProject: null,
+    nProjectsVisible: 4,
+    firstProjectIndex: 0,
     questionsSelected: false,
     menu_button_tap: function(event, detail, sender) {
       this.menuHidden = !this.menuHidden;
