@@ -5,6 +5,7 @@
 <link rel="import" href="/bower_components/core-menu/core-menu.html">
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/seed-element-master/elements/star-rating-element.html">
 
 <polymer-element name="x-individual-project-card" attributes="project background selected">
   <template>
@@ -68,6 +69,12 @@
         text-align:right;
       }
 
+      #question
+      {
+        text-align: right;
+        margin-right: 50px;
+      }
+
     </style>
       <div vertical layout justified center relative fit style="background-color: {{background}}">
         <div></div>
@@ -75,8 +82,8 @@
         <div vertical layout hidden?={{!selected}}>
           <template repeat="{{ q in project.value.questions }}">
             <div horizontal justified layout>
-            <div>{{q.question}}</div>
-            <div>{{q.answer}}</div>
+            <div flex id="question">{{q.question}}</div>
+            <star-rating-element flex nStars={{q.answer}}></star-rating-element>
             </div>
           </template>
         </div>
