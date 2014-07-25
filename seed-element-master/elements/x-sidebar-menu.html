@@ -6,6 +6,8 @@
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
+<link rel="import" href="/icons/average-npa.svg">
+
 
 <polymer-element name="x-sidebar-menu">
   <template>
@@ -13,15 +15,38 @@
       :host {
         display: flex;
         background-color: #c7c7c7;
+        color: rgb(255, 255, 255);
+      }
+      
+      .menu-block
+      {
+        text-align:center;
+      }
+      
+      .menuicon
+      {
+        height: 36px;
+        width: 36px;
+        margin: 20px;
+        fill: white;
       }
 
     </style>
 
-    <div vertical flex justify layout>
+    <div vertical flex justify layout style="margin-top: 64px">
+      <template repeat="{{m, mIndex in menus}}">
+        <div class="menu-block" horizontal layout flex center style="background-color: {{backgrounds[mIndex]}}">
+          <object class="menuicon" data="{{icons[mIndex]}}" type="image/svg+xml"></object>
+          <div>{{m}}</div>
+        </div>
+      </template> 
     </div>
   </template>
   <script>
   Polymer('x-sidebar-menu', {
+    backgrounds: ['#c7c7c7', '#b6b6b6', '#acacac', '#9e9e9e'],
+    menus: ['Projects', 'Question Averages', 'NPA Averages', 'Hall of Fame'],
+    icons: ['/icons/search-icon.svg', '/icons/average-star.svg', '/icons/average-npa.svg', '/icons/trophy.svg'],
     ready: function(){
     }
   });
