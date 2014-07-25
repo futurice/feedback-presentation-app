@@ -273,6 +273,22 @@ app.post('/api/futufeedback/:projectname', function(req, res) {
   res.send();
 });
 
+app.get('/api/futufeedback_topic/', function(req, res) {
+console.log(req);
+  res.set('Content-Type', 'application/json');
+  db.view('questions', 'by_type', {keys: ['question']}, function(err, body) {
+    if (!err) {
+      var questionlist = body.rows.map(
+        function(elem)
+        {
+          return {'question':elem.value.question, 'topic': elem.value.topic, 'answer': 0};
+        }
+        );
+      res.send(JSON.stringify(questionlist));
+    }
+  });
+});
+
 app.get('/api/futufeedback/', function(req, res) {
 console.log(req);
   res.set('Content-Type', 'application/json');
