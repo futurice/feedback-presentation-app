@@ -37,6 +37,7 @@
       :host {
         position: relative;
         background-color: #8bc34a;
+        padding-top:64px;
         color: rgb(255, 255, 255);
       }
 
@@ -69,6 +70,11 @@
         text-align:right;
       }
 
+      #npa_score
+      {
+        text-align: center;
+        margin-right: 50px;
+      }
       #question
       {
         text-align: right;
@@ -80,10 +86,12 @@
         <div></div>
         <div>{{project.key}}</div>
         <div vertical layout hidden?={{!selected}}>
+          <div id="npa_score">NPAScore</div>
+            <star-rating-element center nStars="{{project.value.npa_score}}"></star-rating-element>
           <template repeat="{{ q in project.value.questions }}">
             <div horizontal justified layout>
             <div flex id="question">{{q.question}}</div>
-            <star-rating-element flex nStars={{q.answer}}></star-rating-element>
+            <star-rating-element flex nStars="{{q.answer}}"></star-rating-element>
             </div>
           </template>
         </div>
