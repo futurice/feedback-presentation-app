@@ -8,7 +8,7 @@
 
 <link rel="import" href="/seed-element-master/elements/x-individual-project-card.html">
 
-<polymer-element name="x-project-answer-list" attributes="projects count startIndex">
+<polymer-element name="x-project-answer-list" attributes="projects availableSpace startIndex">
   <template>
     <style>
       :host {
@@ -20,36 +20,48 @@
 
     <div horizontal flex justify layout>
       <template repeat="{{ p, pIndex in projects }}">
-        <template if="{{count > pIndex && pIndex >= startIndex}}">
-        <x-individual-project-card flex project={{p}} background={{backgrounds[pIndex]}} on-tap={{card_tap}}></x-individual-project-card>
+        <template if="{{pIndex >= startIndex && pIndex < (startIndex + availableSpace - cropNCards)}}">
+          <x-individual-project-card flex project={{p}} background={{backgrounds[pIndex]}} on-tap={{card_tap}}></x-individual-project-card>
         </template>
       </template>
-      <div flex style="background-color: {{backgrounds[5]}}" hidden?="{{count > 5}}"></div>
+      <!--div flex style="background-color: {{backgrounds[5]}}" hidden?="{{count != 6}}"></div-->
       </div>
   </template>
   <script>
   Polymer('x-project-answer-list', {
-    condition: true,
     selectedCard: null,
+    cropNCards: 0,
     backgrounds: ['#6bc177', '#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
     card_tap: function(event, detail, sender)
     {
-       if(this.selectedCard != null)
+      if(sender == this.selectedCard)
+      {
+          this.unselect_card(this.selectedCard);
+      }
+      else
+      {
+        if(this.selectedCard != null)
+          this.unselect_card(this.selectedCard);
+        this.selectedCard = sender;
+        this.select_card(sender);  
+      }
+    },
+    availableSpaceChanged: function(oldValue, newValue) {
+      if(this.selectedCard != null)
         this.unselect_card(this.selectedCard);
-       else
-         this.count = this.count - 1;
-      this.selectedCard = sender;
-      this.select_card(sender);  
     },
     unselect_card: function(card)
     {
       card.removeAttribute('two');
       card.selected = false;
+      this.cropNCards = 0;
+      this.selectedCard = null;
     },
     select_card: function(card)
     {
       card.setAttribute('two', '');
       card.selected = true;
+      this.cropNCards = 1;
     },
     ready: function(){
     }

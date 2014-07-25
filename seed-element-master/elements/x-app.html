@@ -82,7 +82,7 @@
         </core-toolbar>
         <div horizontal layout relative fit>
         <x-sidebar-menu flex two center hidden?={{menuHidden}}></x-sidebar-menu>
-        <x-project-answer-list flex four center projects="{{projects}}" count="{{nProjectsVisible}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
+        <x-project-answer-list flex four center projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
         </div>
       </div>
 
@@ -92,29 +92,15 @@
   <script>
   Polymer('x-app', {
     menuHidden:true,
-    selectedProject: null,
-    nProjectsVisible: 5,
+    availableSpaceForProjectCards: 6,
     firstProjectIndex: 0,
     questionsSelected: false,
     menu_button_tap: function(event, detail, sender) {
       this.menuHidden = !this.menuHidden;
       if(this.menuHidden)
-        this.nProjectsVisible = 6;
+        this.availableSpaceForProjectCards = 6;
       else
-        this.nProjectsVisible = 4;
-    },
-    handleItemTap: function(event, detail, sender) {
-      this.selectProject(sender.templateInstance.model.p);
-    },
-    questionsTap: function(event, detail, sender) {
-      this.selectedProject = null;
-      this.questionsSelected = true;
-	//handle questions tap
-    },
-    selectProject: function(project) {
-      this.selectedProject = project;
-      this.questionsSelected = false;
-      console.log("Selected tribe: " + project.key);
+        this.availableSpaceForProjectCards = 4;
     },
     ready: function(){
     }
