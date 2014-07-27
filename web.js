@@ -189,7 +189,7 @@ insertbsdata(db);
 app.get('/api/opportunities', function(req, res) {
 		salesforce.getSalesforceData(function(data)
 		{
-		res.set('Content-Type', 'application/json');
+						res.set('Content-Type', 'application/json');
 			res.send(JSON.stringify(data));
 		});
 });
@@ -265,28 +265,12 @@ app.get('/api/projects/:projectname/all/', function(req, res) {
   });
 });
 
-app.post('/api/futufeedback/:projectname', function(req, res) {
+app.post('/api/futufeedback', function(req, res) {
   console.log('posting stuff');
   console.log(req.body);
   db.insert(req.body);
   
   res.send();
-});
-
-app.get('/api/futufeedback_topic/', function(req, res) {
-console.log(req);
-  res.set('Content-Type', 'application/json');
-  db.view('questions', 'by_type', {keys: ['question']}, function(err, body) {
-    if (!err) {
-      var questionlist = body.rows.map(
-        function(elem)
-        {
-          return {'question':elem.value.question, 'topic': elem.value.topic, 'answer': 0};
-        }
-        );
-      res.send(JSON.stringify(questionlist));
-    }
-  });
 });
 
 app.get('/api/futufeedback/', function(req, res) {
