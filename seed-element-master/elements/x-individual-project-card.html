@@ -6,6 +6,7 @@
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/seed-element-master/elements/star-rating-element.html">
+<script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
 
 <polymer-element name="x-individual-project-card" attributes="project background selected">
   <template>
@@ -92,10 +93,10 @@
         <div vertical layout center hidden?={{!selected}}>
           <div id="npa_score">NPAScore</div>
             <star-rating-element center nStars="{{project.value.npa_score}}"></star-rating-element>
-          <template repeat="{{ q in project.value.questions }}">
+          <template repeat="{{ t in groupedTopics(project.value.questions) }}">
             <div horizontal justified center layout>
-            <div flex center id="question">{{q.topic}}</div>
-            <star-rating-element flex nStars="{{q.answer}}"></star-rating-element>
+            <div flex center id="question">{{t.topic}}</div>
+            <star-rating-element flex nStars="{{t.average}}"></star-rating-element>
             </div>
           </template>
         </div>
@@ -104,6 +105,18 @@
   </template>
   <script>
   Polymer('x-individual-project-card', {
+    groupedTopics: function(questions)
+    {
+      var a = _.groupBy(questions, function(q){ return q.topic;});
+      a = _.map(a, function(value, key){ 
+        var avg = _.reduce(value, function(memo, ans) { 
+            return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)}
+          }, {i: 0, avg: 0.0});
+        return {topic: key, average: avg.avg};
+      });
+      console.log(a);
+      return a;
+    },
     ready: function(){
     }
   });

@@ -11,6 +11,7 @@
   "dependencies": {
     "express": "^4.4.5",
     "nano": "",
+    "underscore": "",
     "body-parser": "",
     "request": "",
     "logfmt": "^1.1.2",

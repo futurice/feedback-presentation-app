@@ -14,6 +14,8 @@ app.use(bodyParser.json());
 
 db = nano.use('futufeedback');
 
+var avg_function = "function(key, values, rereduce) { if (!rereduce){ values = values.map(function(elem) { return parseFloat(elem.answer); }); var length = values.length return [sum(values) / length, length] }else{ var length = sum(values.map(function(v){return v[1]})) var avg = sum(values.map(function(v){ return v[0] * (v[1] / length) })) return [avg, length] } }";
+
 //MIGRATION
 
 function migration()
@@ -97,7 +99,7 @@ function migration()
       {
       if(doc.npa_score)
       {
-	emit(doc.project, doc.npa_score);
+        emit(doc.project, doc.npa_score);
       }
       },
       "reduce":
