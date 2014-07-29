@@ -11,6 +11,7 @@
 <link rel="import" href="/seed-element-master/elements/x-questions-service.html">
 <link rel="import" href="/seed-element-master/elements/x-project-answer-list.html">
 <link rel="import" href="/seed-element-master/elements/x-questions-list.html">
+<link rel="import" href="/bower_components/core-animation/web-animations.html">
 <script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
 <link href='http://fonts.googleapis.com/css?family=Quattrocento|Quattrocento+Sans' rel='stylesheet' type='text/css'>
 
@@ -82,8 +83,8 @@
           </div>
         </core-toolbar>
         <div horizontal layout relative fit>
-        <x-sidebar-menu flex two center hidden?={{menuHidden}} filter={{filter}}></x-sidebar-menu>
-        <x-project-answer-list flex four center projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
+        <x-sidebar-menu id="sidebar"style="max-width: 0%" center two filter={{filter}}></x-sidebar-menu>
+        <x-project-answer-list flex center projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
         </div>
       </div>
 
@@ -113,15 +114,27 @@
       }
       return p;
     },
-    availableSpaceForProjectCards: 5,
+    availableSpaceForProjectCards: 4,
     firstProjectIndex: 0,
     questionsSelected: false,
     menu_button_tap: function(event, detail, sender) {
       this.menuHidden = !this.menuHidden;
-      if(this.menuHidden)
-        this.availableSpaceForProjectCards = 5;
-      else
-        this.availableSpaceForProjectCards = 3;
+      var sidebar = this.$.sidebar;
+      if(this.menuHidden) {
+        var player = document.timeline.play(new Animation(sidebar, [
+            {maxWidth: "25%"},
+            {maxWidth: "0%"}
+            ],
+            {duration: 150, fill: 'forwards'}));
+        }
+      else {
+        var player = document.timeline.play(new Animation(sidebar, [
+            {maxWidth: "0%"},
+            {maxWidth: "25%"}
+            ],
+            {duration: 150, fill: 'forwards'}));
+        this.availableSpaceForProjectCards = 4;
+        }
     },
     ready: function(){
     }

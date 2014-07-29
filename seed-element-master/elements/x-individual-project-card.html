@@ -86,8 +86,15 @@
         margin-right: 50px;
       }
 
+      #rootgrid
+      {
+        background: rgba(0,0,0,0);
+      }
+
+
     </style>
-      <div vertical layout justified center relative fit style="background-color: {{background}}">
+      <div style="background-color: {{background}}" vertical layout justified center relative fit>
+      <div id="rootgrid" vertical layout justified center relative fit>
         <div></div>
         <div>{{project.key}}</div>
         <div vertical layout center hidden?={{!selected}}>
@@ -101,6 +108,7 @@
           </template>
         </div>
         <div>{{project.value.customer_contact}}</div>
+      </div>
       </div>
   </template>
   <script>
@@ -116,6 +124,19 @@
       });
       console.log(a);
       return a;
+    },
+    projectChanged: function(oldvalue, newvalue)
+    {
+        var rootgrid = this.$.rootgrid;
+        var player = document.timeline.play(new AnimationSequence([new Animation(rootgrid, [
+            {opacity: "1.0"},
+            {opacity: "0.0"}
+            ],
+            {duration: 150, fill: 'forwards'}),new Animation(rootgrid, [
+            {opacity: "0.0"},
+            {opacity: "1.0"}
+            ],
+            {duration: 150, fill: 'forwards'}) ]));
     },
     ready: function(){
     }
