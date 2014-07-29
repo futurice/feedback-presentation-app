@@ -1,14 +1,8 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/font-roboto/roboto.html">
-<link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
-<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
-<link rel="import" href="/bower_components/core-menu/core-menu.html">
-<link rel="import" href="/bower_components/core-menu/core-submenu.html">
-<link rel="import" href="/bower_components/paper-item/paper-item.html">
-
 <link rel="import" href="/seed-element-master/elements/x-individual-project-card.html">
+<script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
 
-<polymer-element name="x-project-answer-list" attributes="projects availableSpace startIndex">
+<polymer-element name="x-project-answer-list" attributes="projects availableSpace startIndex searchString">
   <template>
     <style>
       :host {
@@ -28,9 +22,9 @@
   </template>
   <script>
   Polymer('x-project-answer-list', {
+    backgrounds: ['#6bc177', '#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
     selectedCard: null,
     cropNCards: 0,
-    backgrounds: ['#6bc177', '#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
     card_tap: function(event, detail, sender)
     {
       if(sender == this.selectedCard)

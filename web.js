@@ -271,7 +271,6 @@ app.post('/api/futufeedback', function(req, res) {
   console.log('posting stuff');
   console.log(req.body);
   db.insert(req.body);
-  
   res.send();
 });
 

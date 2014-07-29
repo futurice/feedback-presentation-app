@@ -11,6 +11,7 @@
 <link rel="import" href="/seed-element-master/elements/x-questions-service.html">
 <link rel="import" href="/seed-element-master/elements/x-project-answer-list.html">
 <link rel="import" href="/seed-element-master/elements/x-questions-list.html">
+<script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
 <link href='http://fonts.googleapis.com/css?family=Quattrocento|Quattrocento+Sans' rel='stylesheet' type='text/css'>
 
 <polymer-element name="x-app">
@@ -69,7 +70,7 @@
     </style>
 
 
-      <x-project-service id="service" projects="{{ projects }}"></x-project-service>
+      <x-project-service id="service" projects="{{ allProjects }}"></x-project-service>
       <x-questions-service id="qservice" questions="{{ questions }}"></x-questions-service>
 
       <div flex id="root-grid">
@@ -81,7 +82,7 @@
           </div>
         </core-toolbar>
         <div horizontal layout relative fit>
-        <x-sidebar-menu flex two center hidden?={{menuHidden}}></x-sidebar-menu>
+        <x-sidebar-menu flex two center hidden?={{menuHidden}} filter={{filter}}></x-sidebar-menu>
         <x-project-answer-list flex four center projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
         </div>
       </div>
@@ -92,6 +93,26 @@
   <script>
   Polymer('x-app', {
     menuHidden:true,
+    allProjects: [],
+    filter: null,
+    allProjectsChanged: function(oldvalue, newvalue)
+    {
+      this.projects = this.filterProjects(this.allProjects);
+    },
+    filterChanged: function(oldvalue, newvalue) {
+       this.projects = this.filterProjects(this.allProjects);  
+    },
+    filterProjects: function(p) {
+      if(this.filter != null) {
+        var filtered = [];
+        var tmp_filter = this.filter;
+        filtered = _.filter(p, function(proj) {
+          return proj.value.project_name.substring(0, tmp_filter.length) === tmp_filter;
+        });
+        return filtered;
+      }
+      return p;
+    },
     availableSpaceForProjectCards: 6,
     firstProjectIndex: 0,
     questionsSelected: false,
