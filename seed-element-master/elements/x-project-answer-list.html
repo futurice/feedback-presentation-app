@@ -1,5 +1,6 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/seed-element-master/elements/x-individual-project-card.html">
+<link rel="import" href="/bower_components/core-animation/web-animations.html">
 <script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
 
 <polymer-element name="x-project-answer-list" attributes="projects availableSpace startIndex searchString">
@@ -8,7 +9,10 @@
       :host {
         display: flex;
       }
-
+      #notfound
+      {
+        background-color: red;
+      }
       .icon
       {
         height:50px;
@@ -26,9 +30,10 @@
           <x-individual-project-card flex project={{p}} background="{{backgrounds[pIndex - startIndex]}}" on-tap={{card_tap}}></x-individual-project-card>
         </template>
       </template>
-      <div id="next" style="background-color: {{backgrounds[availableSpace]}}" on-tap={{more_tap}} hidden?="{{ !((projects.length - startIndex) > availableSpace)}}" flex vertical layout center center-justified>
+      <div id="next" style="background-color: {{backgrounds[availableSpace]}}" on-tap={{more_tap}} hidden?="{{ !(projects.length > availableSpace)}}" flex vertical layout center center-justified>
           <object class="icon" data="/icons/dots.svg" type="image/svg+xml"></object>
       </div>
+      <div id="notfound" hidden?="{{projects.length > 0}}" flex></div>
       <!--div flex style="background-color: {{backgrounds[5]}}" hidden?="{{count != 6}}"></div-->
       </div>
   </template>
@@ -53,6 +58,7 @@
     more_tap: function(event, detail, sender)
     {
         this.startIndex += this.availableSpace;
+        if(this.startIndex >= this.projects.length) this.startIndex = 0;
     },
     availableSpaceChanged: function(oldValue, newValue) {
       if(this.selectedCard != null)
@@ -60,13 +66,19 @@
     },
     unselect_card: function(card)
     {
-      card.removeAttribute('two');
       card.selected = false;
+      var player = document.timeline.play(new Animation(card, [
+            {minWidth: "0%"}
+            ],
+            {duration: 150, fill: 'forwards'}));
       this.selectedCard = null;
     },
     select_card: function(card)
     {
-      card.setAttribute('two', '');
+      var player = document.timeline.play(new Animation(card, [
+            {minWidth: "50%"}
+            ],
+            {fill:'forwards', duration: 150}));
       card.selected = true;
     },
     ready: function(){
