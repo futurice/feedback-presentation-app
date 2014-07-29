@@ -98,30 +98,30 @@
     allProjectsChanged: function(oldvalue, newvalue)
     {
       this.projects = this.filterProjects(this.allProjects);
+      this.firstProjectIndex = 0;
     },
     filterChanged: function(oldvalue, newvalue) {
+      this.firstProjectIndex = 0;
        this.projects = this.filterProjects(this.allProjects);  
     },
     filterProjects: function(p) {
       if(this.filter != null) {
-        var filtered = [];
         var tmp_filter = this.filter;
-        filtered = _.filter(p, function(proj) {
+        return _.filter(p, function(proj) {
           return proj.value.project_name.substring(0, tmp_filter.length) === tmp_filter;
         });
-        return filtered;
       }
       return p;
     },
-    availableSpaceForProjectCards: 6,
+    availableSpaceForProjectCards: 5,
     firstProjectIndex: 0,
     questionsSelected: false,
     menu_button_tap: function(event, detail, sender) {
       this.menuHidden = !this.menuHidden;
       if(this.menuHidden)
-        this.availableSpaceForProjectCards = 6;
+        this.availableSpaceForProjectCards = 5;
       else
-        this.availableSpaceForProjectCards = 4;
+        this.availableSpaceForProjectCards = 3;
     },
     ready: function(){
     }

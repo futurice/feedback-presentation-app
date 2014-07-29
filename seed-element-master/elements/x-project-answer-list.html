@@ -9,14 +9,26 @@
         display: flex;
       }
 
+      .icon
+      {
+        height:50px;
+      }
+      #next:hover
+      {
+        opacity:0.9;
+      }
+
     </style>
 
     <div horizontal flex justify layout>
       <template repeat="{{ p, pIndex in projects }}">
-        <template if="{{pIndex >= startIndex && pIndex < (startIndex + availableSpace - cropNCards)}}">
-          <x-individual-project-card flex project={{p}} background={{backgrounds[pIndex]}} on-tap={{card_tap}}></x-individual-project-card>
+        <template if="{{pIndex >= startIndex && pIndex < (startIndex + availableSpace)}}">
+          <x-individual-project-card flex project={{p}} background="{{backgrounds[pIndex - startIndex]}}" on-tap={{card_tap}}></x-individual-project-card>
         </template>
       </template>
+      <div id="next" style="background-color: {{backgrounds[availableSpace]}}" on-tap={{more_tap}} hidden?="{{ !((projects.length - startIndex) > availableSpace)}}" flex vertical layout center center-justified>
+          <object class="icon" data="/icons/dots.svg" type="image/svg+xml"></object>
+      </div>
       <!--div flex style="background-color: {{backgrounds[5]}}" hidden?="{{count != 6}}"></div-->
       </div>
   </template>
@@ -24,7 +36,6 @@
   Polymer('x-project-answer-list', {
     backgrounds: ['#6bc177', '#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
     selectedCard: null,
-    cropNCards: 0,
     card_tap: function(event, detail, sender)
     {
       if(sender == this.selectedCard)
@@ -39,6 +50,10 @@
         this.select_card(sender);  
       }
     },
+    more_tap: function(event, detail, sender)
+    {
+        this.startIndex += this.availableSpace;
+    },
     availableSpaceChanged: function(oldValue, newValue) {
       if(this.selectedCard != null)
         this.unselect_card(this.selectedCard);
@@ -47,14 +62,12 @@
     {
       card.removeAttribute('two');
       card.selected = false;
-      this.cropNCards = 0;
       this.selectedCard = null;
     },
     select_card: function(card)
     {
       card.setAttribute('two', '');
       card.selected = true;
-      this.cropNCards = 1;
     },
     ready: function(){
     }
