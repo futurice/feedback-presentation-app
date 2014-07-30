@@ -40,6 +40,7 @@
         background-color: #8bc34a;
         padding-top:64px;
         color: rgb(255, 255, 255);
+        overflow: hidden;
       }
   
       :hover
@@ -53,6 +54,13 @@
       
       }
 
+      #detail_section
+      {
+        opacity:0.0; 
+        max-height:0%;
+        max-width:0%;
+        margin-top: 40px;
+      }
 
       #root-grid {
         position: absolute;
@@ -76,10 +84,18 @@
         text-align:right;
       }
 
-      #npa_score
+      #npa_header
       {
         text-align: center;
       }
+
+      #npa_number
+      {
+        text-align: center;
+        font-size: 70px;
+        margin-bottom: 20px;
+      }
+
       #question
       {
         text-align: right;
@@ -93,13 +109,12 @@
 
 
     </style>
-      <div style="background-color: {{background}}" vertical layout justified center relative fit>
-      <div id="rootgrid" vertical layout justified center relative fit>
-        <div></div>
-        <div>{{project.key}}</div>
-        <div vertical layout center hidden?={{!selected}}>
-          <div id="npa_score">NPAScore</div>
-            <star-rating-element center nStars="{{project.value.npa_score}}"></star-rating-element>
+      <div style="background-color: {{background}}" relative fit>
+      <div id="rootgrid" vertical layout center justified relative fit>
+        <div vertical end-justified layout flex>{{project.key}}</div>
+        <div id="detail_section" vertical layout flex two>
+          <div id="npa_header">NPAScore</div>
+            <div id="npa_number">{{project.value.npa_score}}</div>
           <template repeat="{{ t in groupedTopics(project.value.questions) }}">
             <div horizontal justified center layout>
             <div flex center id="question">{{t.topic}}</div>
@@ -107,7 +122,7 @@
             </div>
           </template>
         </div>
-        <div>{{project.value.customer_contact}}</div>
+        <div vertical end-justified layout flex>{{project.value.customer_contact}}</div>
       </div>
       </div>
   </template>
@@ -125,18 +140,32 @@
       console.log(a);
       return a;
     },
+    selectedChanged: function(oldvalue, newvalue)
+    {
+        var detail = this.$.detail_section;
+      if(newvalue) {
+        var player = document.timeline.play(new Animation(detail, [
+            {opacity: "0.0", maxHeight: '0%', maxWidth: '0%'},
+            {opacity: "1.0", maxHeight: '100%', maxWidth: '100%'}
+            ],
+            {duration: 150, fill: 'forwards'}) );
+       }
+      else {
+        var player = document.timeline.play(new Animation(detail, [
+            {opacity: "1.0", maxHeight: '100%', maxWidth: '100%'},
+            {opacity: "0.0", maxHeight: '0%', maxWidth: '0%'}
+            ],
+            {duration: 150, fill: 'forwards'}) );
+       }
+    },
     projectChanged: function(oldvalue, newvalue)
     {
         var rootgrid = this.$.rootgrid;
-        var player = document.timeline.play(new AnimationSequence([new Animation(rootgrid, [
-            {opacity: "1.0"},
-            {opacity: "0.0"}
-            ],
-            {duration: 150, fill: 'forwards'}),new Animation(rootgrid, [
+        var player = document.timeline.play(new Animation(rootgrid, [
             {opacity: "0.0"},
             {opacity: "1.0"}
             ],
-            {duration: 150, fill: 'forwards'}) ]));
+            {duration: 150, fill: 'forwards'}) );
     },
     ready: function(){
     }
