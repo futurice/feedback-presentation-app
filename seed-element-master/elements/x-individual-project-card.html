@@ -11,41 +11,20 @@
 <polymer-element name="x-individual-project-card" attributes="project background selected">
   <template>
     <style>
-      /*
-      Colors
-      ========================================
-
-
-      Primary color: Light Green
-        500   #8bc34a
-      Variant hues:
-        100   #dcedc8
-        700   #689f38
-
-      Accent: Amber
-        A100  #ffe57f
-        A400  #ffc400
-
-      Grayscale:
-        #fff
-        #fafafa
-        #222
-
-
-      http://www.google.com/design/spec/style/color.html#color-ui-color-palette
-      */
-
       :host {
         position: relative;
         background-color: #8bc34a;
         padding-top:64px;
         color: rgb(255, 255, 255);
+        cursor: pointer;
         overflow: hidden;
+        user-select: none;
+        text
       }
   
       :hover
       {
-        opacity: 0.9;
+        opacity: 0.95;
       }
 
       #project-section
@@ -105,6 +84,8 @@
       #rootgrid
       {
         background: rgba(0,0,0,0);
+        margin-right: 20px;
+        margin-left: 20px;
       }
 
 
