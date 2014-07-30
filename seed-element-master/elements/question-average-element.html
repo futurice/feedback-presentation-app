@@ -1,0 +1,112 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/font-roboto/roboto.html">
+<link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="/bower_components/core-menu/core-menu.html">
+<link rel="import" href="/bower_components/core-menu/core-submenu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/seed-element-master/elements/star-rating-element.html">
+<script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
+
+<polymer-element name="question-average-element" attributes="projects background filter">
+  <template>
+    <style>
+      :host {
+        position: relative;
+        background-color: #6bc177;
+        padding-top:64px;
+        color: rgb(255, 255, 255);
+        overflow: hidden;
+        user-select: none;
+      }
+  
+
+      #project-section
+      {
+        text-align:center;
+      
+      }
+
+      #detail_section
+      {
+        margin-top: 40px;
+      }
+
+      .star-answer
+      {
+        margin: 10px;
+        color: #8bc34a;
+        text-align: right;
+      }
+
+      #npa-item
+      {
+        color: #8bc34a;
+        font-size:120px;
+        text-align:right;
+      }
+
+      #npa_header
+      {
+        text-align: center;
+      }
+
+      #npa_number
+      {
+        text-align: center;
+        font-size: 70px;
+        margin-bottom: 20px;
+      }
+
+      #question
+      {
+        text-align: right;
+        margin-right: 50px;
+      }
+
+      .avg-number
+      {
+        font-size: 30px;
+      }
+
+      #rootgrid
+      {
+        background: rgba(0,0,0,0);
+        margin-right: 20px;
+        margin-left: 20px;
+      }
+
+
+    </style>
+      <div id="rootgrid" vertical layout center justified relative fit>
+        <div vertical end-justified layout flex two>Averages for topics</div>
+        <div id="detail_section" vertical layout flex two>
+          <template repeat="{{ avg in averages }}">
+            <div horizontal justified center layout>
+            <div flex center id="question">{{avg.topic}}</div>
+            <div flex center class="avg-number">{{avg.average}}</div>
+            </div>
+          </template>
+        </div>
+        <div vertical end-justified layout flex>Filters here</div>
+      </div>
+  </template>
+  <script>
+  Polymer('question-average-element', {
+    averages: null,
+    projectsChanged: function(oldvalue, newvalue)
+    {
+        this.averages = _.chain(newvalue)
+            .reduce(function(memo, val){ return memo.concat(val.value.questions); }, [])
+            .groupBy(function(val){ return val.topic; })
+            .map(function(value, key){
+              var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
+              return {topic: key, average: avg.avg}; })
+            .value();
+        
+    },
+    ready: function(){
+    }
+  });
+  </script>
+</polymer-element>

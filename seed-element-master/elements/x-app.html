@@ -12,6 +12,7 @@
 <link rel="import" href="/seed-element-master/elements/x-project-answer-list.html">
 <link rel="import" href="/seed-element-master/elements/x-questions-list.html">
 <link rel="import" href="/bower_components/core-animation/web-animations.html">
+<link rel="import" href="/seed-element-master/elements/question-average-element.html">
 <script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
 <link href='http://fonts.googleapis.com/css?family=Quattrocento|Quattrocento+Sans' rel='stylesheet' type='text/css'>
 
@@ -72,7 +73,6 @@
 
 
       <x-project-service id="service" projects="{{ allProjects }}"></x-project-service>
-      <x-questions-service id="qservice" questions="{{ questions }}"></x-questions-service>
 
       <div flex id="root-grid">
         <core-toolbar id="core_toolbar">
@@ -82,8 +82,9 @@
           </div>
         </core-toolbar>
         <div horizontal layout relative fit>
-        <x-sidebar-menu id="sidebar"style="max-width: 0%" center two filter={{filter}}></x-sidebar-menu>
+        <x-sidebar-menu id="sidebar"style="max-width: 0%" center two selectedSection={{selectedSection}} filter={{filter}}></x-sidebar-menu>
         <x-project-answer-list flex center projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
+        <question-average-element projects={{projects}} flex center></question-average-element>
         </div>
       </div>
 

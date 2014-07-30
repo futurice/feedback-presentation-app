@@ -44,7 +44,7 @@
           </div>
         </div>
       <template repeat="{{m, mIndex in menus}}">
-        <div class="menu-block" horizontal layout flex center style="background-color: {{backgrounds[mIndex + 1]}}">
+        <div class="menu-block" on-tap={{menu_block_tap}} horizontal layout flex center style="background-color: {{backgrounds[mIndex + 1]}}">
           <object class="menuicon" data="{{icons[mIndex + 1]}}" type="image/svg+xml"></object>
           <div>{{m}}</div>
         </div>
@@ -59,6 +59,10 @@
     onSearchInput: function(event, detail, sender)
     {
       this.filter = sender.inputValue;
+
+    },
+    menu_block_tap: function(event, detail, sender)
+    {
 
     },
     ready: function(){
