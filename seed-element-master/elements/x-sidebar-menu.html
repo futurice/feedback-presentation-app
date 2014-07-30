@@ -10,7 +10,7 @@
 <link rel="import" href="/icons/average-npa.svg">
 
 
-<polymer-element name="x-sidebar-menu" attributes="filter">
+<polymer-element name="x-sidebar-menu" attributes="filter menus">
   <template>
     <style>
       :host {
@@ -38,30 +38,27 @@
 
     <div vertical flex justify layout style="margin-top: 64px">
         <div class="menu-block" horizontal layout flex center style="background-color: {{backgrounds[0]}}">
-          <object class="menuicon" data="{{icons[0]}}" type="image/svg+xml"></object>
+          <object class="menuicon" data="/icons/search-icon.svg" type="image/svg+xml"></object>
           <div>
           <core-input placeholder="Search projects" on-input={{onSearchInput}} flex></core-input>
           </div>
         </div>
-      <template repeat="{{m, mIndex in menus}}">
-        <div class="menu-block" on-tap={{menu_block_tap}} horizontal layout flex center style="background-color: {{backgrounds[mIndex + 1]}}">
-          <object class="menuicon" data="{{icons[mIndex + 1]}}" type="image/svg+xml"></object>
-          <div>{{m}}</div>
+      <template repeat="{{m in menus}}">
+        <div class="menu-block" on-tap={{menu.callback}} horizontal layout flex center style="background-color: {{m.background}}">
+          <object class="menuicon" data="{{m.icon}}" type="image/svg+xml"></object>
+          <div>{{m.label}}</div>
         </div>
       </template> 
     </div>
   </template>
   <script>
   Polymer('x-sidebar-menu', {
-    backgrounds: ['#c7c7c7', '#b6b6b6', '#acacac', '#9e9e9e'],
-    menus: ['Question Averages', 'NPA Averages', 'Hall of Fame'],
-    icons: ['/icons/search-icon.svg', '/icons/average-star.svg', '/icons/average-npa.svg', '/icons/trophy.svg'],
     onSearchInput: function(event, detail, sender)
     {
       this.filter = sender.inputValue;
 
     },
-    menu_block_tap: function(event, detail, sender)
+    menuTapped: function(event, detail, sender)
     {
 
     },
