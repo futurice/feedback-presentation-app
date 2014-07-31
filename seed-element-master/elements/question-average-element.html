@@ -21,12 +21,19 @@
       }
   
       .circle {
+        margin: auto;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       .spec {
         position: absolute;
-        top: 33%;
-        left: 33%;
+        text-align: center;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
       }
 
       #npa-item
@@ -50,8 +57,8 @@
 
       #question
       {
-        text-align: right;
-        margin-right: 50px;
+        text-align:center;
+        margin: 10px;
       }
 
       .avg-number
@@ -64,14 +71,16 @@
     <div vertical layout relative fit>
       <div horizontal flex justified layout center relative fit>
             <template repeat="{{ avg in averages_by_topic }}">
-            <div flex relative>
-              <svg class="circle" height="100%" viewBox="0 0 100 100">
-                <circle r="50" cx="50" cy="50" fill="red" />
-              </svg>
-                <div class="spec" vertical justified center layout>
-                  <div id="question">{{avg.topic}}</div>
-                  <div class="avg-number">{{avg.average}}</div>
-                </div>
+            <div vertical flex>
+              <div flex relative>
+                <svg class="circle" width="{{avg.average/5.0 * 100}}%" viewBox="0 0 100 100">
+                  <circle r="50" cx="50" cy="50" fill="red" />
+                </svg>
+                  <div class="spec" vertical center-justified layout>
+                    <div class="avg-number">{{avg.average}}</div>
+                  </div>
+              </div>
+              <div flex id="question">{{avg.topic}}</div>
             </div>
             </template>
         </div>
