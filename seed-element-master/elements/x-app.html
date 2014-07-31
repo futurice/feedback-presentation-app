@@ -1,6 +1,5 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/font-roboto/roboto.html">
-<link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="/bower_components/font-roboto/roboto.html"> <link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
 <link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
 <link rel="import" href="/bower_components/core-menu/core-menu.html">
 <link rel="import" href="/bower_components/core-menu/core-submenu.html">
@@ -87,7 +86,13 @@
         margin-top: 0px;
         color: #fff;
         cursor: pointer;
-        
+      }
+
+      #keywords {
+        text-align: center;
+        font-size: 12px;
+        margin: 20px;
+        opacity: 0.7;
       }
 
       paper-item.core-selected {
@@ -110,10 +115,34 @@
         </core-toolbar>
         <div horizontal layout relative fit>
         <!--sidebar menu-->
-        <div vertical flex justify layout id="sidebar">
-          <div class="menu-block" horizontal layout flex center style="background-color: #c7c7c7; margin-top:64px">
-            <object class="menuicon" data="/icons/search-icon.svg" type="image/svg+xml"></object> <div>
-            <core-input placeholder="Filter projects" on-input={{onSearchInput}} flex></core-input>
+        <div vertical flex two justified layout id="sidebar">
+          <div class="menu-block" vertical layout flex two justified style="background-color: #c7c7c7; margin-top:64px">
+            <div horizontal layout center flex>
+              <object class="menuicon" data="/icons/project-name-icon.svg" type="image/svg+xml"></object> 
+              <div>
+                <core-input id="project_input" placeholder="Project name" on-input={{onFilterInput}} flex></core-input>
+              </div>
+            </div>
+            <div horizontal layout center flex>
+              <object class="menuicon" data="/icons/tribes-icon.svg" type="image/svg+xml"></object> 
+              <div>
+                <core-input id="tribe_input" placeholder="Tribe" on-input={{onFilterInput}} flex></core-input>
+              </div>
+            </div>
+            <div horizontal layout center flex>
+              <object class="menuicon" data="/icons/customer-icon.svg" type="image/svg+xml"></object> 
+              <div>
+                <core-input id="customer_input" placeholder="Customer" on-input={{onFilterInput}} flex></core-input>
+              </div>
+            </div>
+            <div horizontal layout center flex>
+              <object class="menuicon" data="/icons/contact-icon2.svg" type="image/svg+xml"></object> 
+              <div>
+                <core-input id="contact_input" placeholder="Project manager" on-input={{onFilterInput}} flex></core-input>
+              </div>
+            </div>
+            <div id="keywords" horizontal layout center flex two>
+                <div>{{keywords}}</div>
             </div>
           </div>
           <div class="menu-block" on-tap={{averageMenuButtonTapped}} horizontal layout flex center style="background-color: #b6b6b6">
@@ -136,29 +165,36 @@
   <script>
   Polymer('x-app', 
     {
-    onSearchInput: function(event, detail, sender)
-    {
-      this.filter = sender.inputValue;
-    },
     allProjects: [],
-    filter: null,
+    keywords: '',
+    filter: { project: '', tribe: '', customer_company: '', customer_contact: ''},
     selectedSectionNumber: 0, 
     allProjectsChanged: function(oldvalue, newvalue)
     {
       this.projects = this.filterProjects(this.allProjects);
       this.firstProjectIndex = 0;
     },
-    filterChanged: function(oldvalue, newvalue) {
+    onFilterInput: function(event, detail, sender) {
+      this.filter.project = this.$.project_input.inputValue; 
+      this.filter.tribe = this.$.tribe_input.inputValue; 
+      this.filter.customer_company = this.$.customer_input.inputValue;
+      this.filter.customer_contact = this.$.contact_input.inputValue; 
       this.firstProjectIndex = 0;
-       this.projects = this.filterProjects(this.allProjects);  
+      this.projects = this.filterProjects(this.allProjects);  
     },
     filterProjects: function(p) {
-      if(this.filter != null) {
-        var tmp_filter = this.filter;
-        return _.filter(p, function(proj) {
-          return proj.value.project_name.substring(0, tmp_filter.length) === tmp_filter;
-        });
-      }
+      var tmp_filter = this.filter;
+      var keywords = [];
+      p = _.filter(p, function(proj) {
+        var retval = true
+        if(tmp_filter.project != '') if(retval &= proj.value.project_name.substring(0, tmp_filter.project.length) === tmp_filter.project) keywords.push(proj.value.project_name); 
+        if(tmp_filter.customer_company != '') if(retval &= proj.value.customer_company.substring(0, tmp_filter.customer_company.length) === tmp_filter.customer_company) keywords.push(proj.value.customer_company); 
+        if(tmp_filter.customer_contact != '') if(retval &= proj.value.customer_contact.substring(0, tmp_filter.customer_contact.length) === tmp_filter.customer_contact) keywords.push(proj.value.customer_contact); 
+        if(tmp_filter.tribe != '') if(retval &= proj.value.tribe.substring(0, tmp_filter.tribe.length) === tmp_filter.tribe) keywords.push(proj.value.tribe); 
+        return retval;
+      });
+      this.keywords = _.uniq(keywords)
+       .join(' ');
       return p;
     },
     menuHidden: true,
