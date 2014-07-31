@@ -70,11 +70,11 @@
     </style>
     <div vertical layout relative fit>
       <div horizontal flex justified layout center relative fit>
-            <template repeat="{{ avg in averages_by_topic }}">
+            <template repeat="{{ avg, avgIndex in averages_by_topic }}">
             <div vertical flex>
               <div flex relative>
                 <svg class="circle" width="{{avg.average/5.0 * 100}}%" viewBox="0 0 100 100">
-                  <circle r="50" cx="50" cy="50" fill="red" />
+                  <circle r="50" cx="50" cy="50" fill={{backgrounds[avgIndex]}} />
                 </svg>
                   <div class="spec" vertical center-justified layout>
                     <div class="avg-number">{{avg.average}}</div>
@@ -89,6 +89,7 @@
   </template>
   <script>
   Polymer('question-average-element', {
+    backgrounds: ['#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
     projectsChanged: function(oldvalue, newvalue)
     {
         this.averages_by_topic = _.chain(newvalue)
