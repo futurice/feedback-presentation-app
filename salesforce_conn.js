@@ -56,8 +56,7 @@ exports.getSalesforceData = function(callback) {
       var cleaned = [];
       for(var i = 0; i < res.records.length; i ++)
       {
-        cleaned[i] = {project_name: res.records[i].Name , owner_name: res.records[i].Owner.Name, company_name: res.records[i].Account.Name
-        };
+        cleaned[i] = {project_name: res.records[i].Name , owner_name: res.records[i].Owner.Name, company_name: res.records[i].Account.Name, tribe: (res.records[i].Futu_Team__c ? res.records[i].Futu_Team__c : '') };
         
       }
       console.log(JSON.stringify(cleaned));
