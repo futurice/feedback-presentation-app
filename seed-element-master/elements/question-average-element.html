@@ -27,9 +27,21 @@
       
       }
 
-      #detail_section
+      #by-question
+      {
+        background-color: #67b672;
+      }
+
+      #by-topic
+      {
+        background-color: #6bc177;
+      }
+
+      .detail_section
       {
         margin-top: 40px;
+        margin-right: 20px;
+        margin-left: 20px;
       }
 
       .star-answer
@@ -67,28 +79,56 @@
       .avg-number
       {
         font-size: 30px;
+        margin: 10px;
       }
 
-      #rootgrid
+      .rootgrid
       {
-        background: rgba(0,0,0,0);
-        margin-right: 20px;
-        margin-left: 20px;
       }
 
 
     </style>
-      <div id="rootgrid" vertical layout center justified relative fit>
-        <div vertical end-justified layout flex two>Averages for topics</div>
-        <div id="detail_section" vertical layout flex two>
-          <template repeat="{{ avg in averages }}">
+    <div horizontal flex justify layout relative fit>
+      <div class="rootgrid" id="by-topic" flex vertical layout center justified>
+        <div vertical end-justified layout flex two>Averages by topic</div>
+        <div  class="detail_section" vertical layout flex two>
+          <template repeat="{{ avg in averages_by_topic }}">
             <div horizontal justified center layout>
-            <div flex center id="question">{{avg.topic}}</div>
+              <div flex center id="question">{{avg.topic}}</div>
+              <div flex center class="avg-number">{{avg.average}}</div>
+            </div>
+          </template>
+        </div>
+        <div vertical end-justified layout flex>Filters here</div>
+      </div>
+
+      <div id="by-question" class="rootgrid" flex vertical layout center justified>
+        <div vertical end-justified layout flex two>Averages by question</div>
+        <div  class="detail_section" vertical layout flex two>
+          <template repeat="{{ avg in averages_by_question }}">
+            <div horizontal justified center layout>
+              <div flex center id="question">{{avg.question}}</div>
+              <div flex center class="avg-number">{{avg.average}}</div>
+            </div>
+          </template>
+        </div>
+        <div vertical end-justified layout flex>Filters here</div>
+      </div>
+    </div>
+
+    <!--div horizontal flex justify layout>
+      <div class="rootgrid" vertical layout center justified relative fit>
+        <div id="by-question" class="detail_section" vertical layout flex two>
+          <template repeat="{{ avg in averages_by_question }}">
+            <div horizontal justified center layout>
+            <div flex center id="question">{{avg.question}}</div>
             <div flex center class="avg-number">{{avg.average}}</div>
             </div>
           </template>
         </div>
         <div vertical end-justified layout flex>Filters here</div>
+       </div> 
+      </div-->
       </div>
   </template>
   <script>
@@ -96,12 +136,20 @@
     averages: null,
     projectsChanged: function(oldvalue, newvalue)
     {
-        this.averages = _.chain(newvalue)
+        this.averages_by_topic = _.chain(newvalue)
             .reduce(function(memo, val){ return memo.concat(val.value.questions); }, [])
             .groupBy(function(val){ return val.topic; })
             .map(function(value, key){
               var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
               return {topic: key, average: avg.avg}; })
+            .value();
+
+        this.averages_by_question = _.chain(newvalue)
+            .reduce(function(memo, val){ return memo.concat(val.value.questions); }, [])
+            .groupBy(function(val){ return val.question; })
+            .map(function(value, key){
+              var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
+              return {question: key, average: avg.avg}; })
             .value();
         
     },

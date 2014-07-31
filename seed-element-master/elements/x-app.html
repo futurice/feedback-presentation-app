@@ -43,6 +43,10 @@
         text-align:center;
       }
       
+      .menu-block:hover
+      {
+        opacity: 0.9;
+      }
       .menuicon
       {
         height: 36px;
@@ -80,7 +84,7 @@
       #sidebar
       {
         max-width: 0%;
-        margin-top: 64px;
+        margin-top: 0px;
         color: #fff;
         cursor: pointer;
         
@@ -107,9 +111,8 @@
         <div horizontal layout relative fit>
         <!--sidebar menu-->
         <div vertical flex justify layout id="sidebar">
-          <div class="menu-block" horizontal layout flex center style="background-color: #c7c7c7">
-            <object class="menuicon" data="/icons/search-icon.svg" type="image/svg+xml"></object>
-            <div>
+          <div class="menu-block" horizontal layout flex center style="background-color: #c7c7c7; margin-top:64px">
+            <object class="menuicon" data="/icons/search-icon.svg" type="image/svg+xml"></object> <div>
             <core-input placeholder="Filter projects" on-input={{onSearchInput}} flex></core-input>
             </div>
           </div>
