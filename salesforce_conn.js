@@ -43,7 +43,7 @@ exports.getSalesforceData = function(callback) {
   console.log("Querying Salesforce.");
 
   conn.query('SELECT Name, Account.Name, '+
-    'Owner.Name, Futu_Team__c '+
+    'Owner.Name, Futu_Team__c, CloseDate '+
     'FROM Opportunity WHERE IsWon = true AND IsClosed = true',
     function(err, res) {
       if (err) { return console.error(err); }
@@ -56,7 +56,7 @@ exports.getSalesforceData = function(callback) {
       var cleaned = [];
       for(var i = 0; i < res.records.length; i ++)
       {
-        cleaned[i] = {project_name: res.records[i].Name , owner_name: res.records[i].Owner.Name, company_name: res.records[i].Account.Name, tribe: (res.records[i].Futu_Team__c ? res.records[i].Futu_Team__c : '') };
+        cleaned[i] = {date: res.records[i].CloseDate, project_name: res.records[i].Name , owner_name: res.records[i].Owner.Name, company_name: res.records[i].Account.Name, tribe: (res.records[i].Futu_Team__c ? res.records[i].Futu_Team__c : '') };
         
       }
       console.log(JSON.stringify(cleaned));

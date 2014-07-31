@@ -20,35 +20,13 @@
         user-select: none;
       }
   
-
-      #project-section
-      {
-        text-align:center;
-      
+      .circle {
       }
 
-      #by-question
-      {
-        background-color: #67b672;
-      }
-
-      #by-topic
-      {
-        background-color: #6bc177;
-      }
-
-      .detail_section
-      {
-        margin-top: 40px;
-        margin-right: 20px;
-        margin-left: 20px;
-      }
-
-      .star-answer
-      {
-        margin: 10px;
-        color: #8bc34a;
-        text-align: right;
+      .spec {
+        position: absolute;
+        top: 33%;
+        left: 33%;
       }
 
       #npa-item
@@ -82,28 +60,23 @@
         margin: 10px;
       }
 
-      .rootgrid
-      {
-      }
-
-
     </style>
-    <div horizontal flex justify layout relative fit>
-      <div class="rootgrid" id="by-topic" flex vertical layout center justified>
-        <div vertical end-justified layout flex two>Averages by topic</div>
-        <div  class="detail_section" vertical layout flex two>
-          <template repeat="{{ avg in averages_by_topic }}">
-            <div horizontal justified center layout>
-              <div flex center id="question">{{avg.topic}}</div>
-              <div flex center class="avg-number">{{avg.average}}</div>
+    <div vertical layout relative fit>
+      <div horizontal flex justified layout center relative fit>
+            <template repeat="{{ avg in averages_by_topic }}">
+            <div flex relative>
+              <svg class="circle" height="100%" viewBox="0 0 100 100">
+                <circle r="50" cx="50" cy="50" fill="red" />
+              </svg>
+                <div class="spec" vertical justified center layout>
+                  <div id="question">{{avg.topic}}</div>
+                  <div class="avg-number">{{avg.average}}</div>
+                </div>
             </div>
-          </template>
+            </template>
         </div>
-        <div vertical end-justified layout flex></div>
-      </div>
-
-
-      </div>
+      <div>
+    </div>
   </template>
   <script>
   Polymer('question-average-element', {
