@@ -103,7 +103,7 @@
             </div>
           </template>
         </div>
-        <div vertical end-justified layout flex>{{project.value.customer_contact}}</div>
+        <div vertical end-justified layout flex>{{!(project.value.tribe == '' || project.value.tribe == null)  ? project.value.tribe : 'Nomad'}}</div>
       </div>
       </div>
   </template>
