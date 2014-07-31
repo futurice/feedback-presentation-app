@@ -102,25 +102,11 @@
         <div vertical end-justified layout flex></div>
       </div>
 
-      <div id="by-question" class="rootgrid" flex vertical layout center justified>
-        <div vertical end-justified layout flex two>Averages by question</div>
-        <div  class="detail_section" vertical layout flex two>
-          <template repeat="{{ avg in averages_by_question }}">
-            <div horizontal justified center layout>
-              <div flex center id="question">{{avg.question}}</div>
-              <div flex center class="avg-number">{{avg.average}}</div>
-            </div>
-          </template>
-        </div>
-        <div vertical end-justified layout flex></div>
-      </div>
-    </div>
 
       </div>
   </template>
   <script>
   Polymer('question-average-element', {
-    averages: null,
     projectsChanged: function(oldvalue, newvalue)
     {
         this.averages_by_topic = _.chain(newvalue)
@@ -130,15 +116,6 @@
               var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
               return {topic: key, average: avg.avg.toFixed(1)}; })
             .value();
-
-        this.averages_by_question = _.chain(newvalue)
-            .reduce(function(memo, val){ return memo.concat(val.value.questions); }, [])
-            .groupBy(function(val){ return val.question; })
-            .map(function(value, key){
-              var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
-              return {question: key, average: avg.avg.toFixed(1)}; })
-            .value();
-        
     },
     ready: function(){
     }
