@@ -19,7 +19,6 @@
         cursor: pointer;
         overflow: hidden;
         user-select: none;
-        text
       }
   
       :hover
@@ -75,6 +74,12 @@
         margin-bottom: 20px;
       }
 
+      .header
+      {
+        text-align: center;
+        margin: 10px;
+      }
+
       #question
       {
         text-align: right;
@@ -92,7 +97,7 @@
     </style>
       <div style="background-color: {{background}}" relative fit>
       <div id="rootgrid" vertical layout center justified relative fit>
-        <div vertical end-justified layout flex>{{project.key}}</div>
+        <div class="header" vertical end-justified layout flex>{{project.key}}</div>
         <div id="detail_section" vertical layout flex two>
           <div id="npa_header">NPAScore</div>
             <div id="npa_number">{{project.value.npa_score}}</div>
@@ -103,7 +108,7 @@
             </div>
           </template>
         </div>
-        <div vertical end-justified layout flex>{{!(project.value.tribe == '' || project.value.tribe == null)  ? project.value.tribe : 'Nomad'}}</div>
+        <div class="header" vertical end-justified layout flex>{{!(project.value.tribe == '' || project.value.tribe == null)  ? project.value.tribe : 'Nomad'}}</div>
       </div>
       </div>
   </template>

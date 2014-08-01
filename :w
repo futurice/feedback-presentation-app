@@ -21,7 +21,6 @@
       }
   
       .circle {
-        opacity: 0.6;
         margin: auto;
         position: relative;
         left: 50%;
@@ -85,15 +84,14 @@
           </div>
 
           <div vertical flex>
-            <div flex relative> 
-              <svg class="circle" width="{{all_average/5.0 * 100}}%" viewBox="0 0 100 100">
+            <div flex relative> <svg class="circle" width="50%" viewBox="0 0 100 100">
                 <circle r="50" cx="50" cy="50" fill={{backgrounds[4]}} />
               </svg>
               <div class="spec" vertical center-justified layout>
-                  <div id="question">All</div>
-                  <div class="avg-number">{{all_average}}</div>
+                  <div class="avg-number">3.6</div>
               </div>
             </div>
+            <div flex id="question">All</div>
           </div>
       </div>
 
@@ -120,18 +118,17 @@
     backgrounds: ['#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
     projectsChanged: function(oldvalue, newvalue)
     {
+        var avg_reduce = function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)}; };
         var avg_arr = _.chain(newvalue)
             .reduce(function(memo, val){ return memo.concat(val.value.questions).concat({topic: 'npa_score', answer: val.value.npa_score}); }, [])
             .groupBy(function(val){ return val.topic; })
             .map(function(value, key){
-              var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
-              return {topic: key, average: avg.avg}; })
+              var avg = _.reduce(value, avg_reduce, {i: 0, avg: 0.0});
+              return {topic: key, average: avg.avg.toFixed(1)}; })
             .value();
         this.npa_score = _.last(avg_arr).average;
-        var sans_npa = _.initial(avg_arr);
-        this.averages_by_topic = _.map(sans_npa, function(elem){return {topic: elem.topic, average: elem.average.toFixed(1)};});
-        this.all_average = _.reduce(sans_npa, function(memo, ans) {
-          return {i : (memo.i + 1), avg: (memo.avg * memo.i + parseFloat(ans.average))/(memo.i+1)} }, {i: 0, avg: 0.0}).avg.toFixed(1); 
+        this.averages_by_topic = _.initial(avg_arr);
+        this.all_average = _.reduce(this.averages_by_topic, avg_reduce, {i: 0, avg: 0.0}).avg;
     },
     ready: function(){
     }
