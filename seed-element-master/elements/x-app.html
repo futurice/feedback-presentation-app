@@ -1,19 +1,17 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/font-roboto/roboto.html"> <link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
-<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
-<link rel="import" href="/bower_components/core-menu/core-menu.html">
-<link rel="import" href="/bower_components/core-menu/core-submenu.html">
-<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../../bower_components/core-menu/core-menu.html">
+<link rel="import" href="../../bower_components/core-menu/core-submenu.html">
+<link rel="import" href="../../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../../bower_components/core-input/core-input.html">
+<link rel="import" href="../../bower_components/core-icon-button/core-icon-button.html">
 
-<link rel="import" href="/seed-element-master/elements/x-sidebar-menu.html">
-<link rel="import" href="/seed-element-master/elements/x-project-service.html">
-<link rel="import" href="/seed-element-master/elements/x-questions-service.html">
-<link rel="import" href="/seed-element-master/elements/x-project-answer-list.html">
-<link rel="import" href="/seed-element-master/elements/x-questions-list.html">
-<link rel="import" href="/bower_components/core-animation/web-animations.html">
-<link rel="import" href="/seed-element-master/elements/question-average-element.html">
-<script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>  
-<link href='http://fonts.googleapis.com/css?family=Quattrocento|Quattrocento+Sans' rel='stylesheet' type='text/css'>
+<link rel="import" href="../../seed-element-master/elements/x-project-service.html">
+<link rel="import" href="../../seed-element-master/elements/x-project-answer-list.html">
+<link rel="import" href="../../bower_components/core-animation/web-animations.html">
+<link rel="import" href="../../seed-element-master/elements/question-average-element.html">
+<script type="text/javascript" src="../../bower_components/underscore/underscore.js"></script>  
+<link href='https://fonts.googleapis.com/css?family=Quattrocento|Quattrocento+Sans' rel='stylesheet' type='text/css'>
 
 <polymer-element name="x-app">
   <template>
@@ -54,17 +52,6 @@
         fill: white;
         stroke: white;
       }
-      /* Main view's header bar */
-      core-scaffold::shadow core-toolbar {
-        background-color: #689f38;
-        color: #fff;
-      }
-
-      /* Main view's background */
-      core-scaffold::shadow [main] {
-        background-color: #fafafa;
-      }
-
       /* Menu panel's header bar */
       .panel--menu::shadow #mainPanel, .panel--menu core-toolbar {
         background-color: #fff;
@@ -74,11 +61,6 @@
       .panel--menu {
         background-color: #fff;
       }
-
-      core-scaffold .panel--menu /deep/ core-menu {
-        margin: 0;
-      }
-
 
       #sidebar
       {
@@ -95,12 +77,6 @@
         opacity: 0.7;
       }
 
-      paper-item.core-selected {
-        background-color: #dcedc8;
-      }
-      paper-item::shadow #ripple {
-        color: #8bc34a;
-      }
     </style>
 
 
@@ -118,25 +94,25 @@
         <div vertical flex two justified layout id="sidebar">
           <div class="menu-block" vertical layout flex two justified style="background-color: #c7c7c7; margin-top:64px">
             <div horizontal layout center flex>
-              <object class="menuicon" data="/icons/project-name-icon.svg" type="image/svg+xml"></object> 
+              <object class="menuicon" data="/feedbackapp/icons/project-name-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="project_input" placeholder="Project name" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
             <div horizontal layout center flex>
-              <object class="menuicon" data="/icons/tribes-icon.svg" type="image/svg+xml"></object> 
+              <object class="menuicon" data="/feedbackapp/icons/tribes-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="tribe_input" placeholder="Tribe" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
             <div horizontal layout center flex>
-              <object class="menuicon" data="/icons/customer-icon.svg" type="image/svg+xml"></object> 
+              <object class="menuicon" data="/feedbackapp/icons/customer-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="customer_input" placeholder="Customer" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
             <div horizontal layout center flex>
-              <object class="menuicon" data="/icons/contact-icon2.svg" type="image/svg+xml"></object> 
+              <object class="menuicon" data="/feedbackapp/icons/contact-icon2.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="contact_input" placeholder="Project manager" on-input={{onFilterInput}} flex></core-input>
               </div>
@@ -146,11 +122,11 @@
             </div>
           </div>
           <div class="menu-block" on-tap={{averageMenuButtonTapped}} horizontal layout flex center style="background-color: #b6b6b6">
-            <object class="menuicon" data='/icons/average-star.svg' type="image/svg+xml"></object>
+            <object class="menuicon" data='/feedbackapp/icons/average-star.svg' type="image/svg+xml"></object>
             <div>Average Scores</div>
           </div>
           <div class="menu-block" on-tap={{hofMenuButtonTapped}} horizontal layout flex center style="background-color: #acacac">
-            <object class="menuicon" data='/icons/trophy.svg' type="image/svg+xml"></object>
+            <object class="menuicon" data='/feedbackapp/icons/trophy.svg' type="image/svg+xml"></object>
             <div>Projects</div>
           </div>
         </div>
@@ -160,7 +136,6 @@
       </div>
 
 
-    </core-scaffold>
   </template>
   <script>
   Polymer('x-app', 

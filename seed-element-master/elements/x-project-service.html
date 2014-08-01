@@ -1,5 +1,4 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
 <polymer-element name="x-project-service" attributes="projects">
   <template>
     <style>
@@ -10,7 +9,7 @@
     <core-ajax 
     id="ajax"
     auto
-    url="/api/projects"
+    url="/feedbackapp/api/projects"
     handleAs="json"
     on-core-response="{{handleResponse}}"></core-ajax>
   </template>
