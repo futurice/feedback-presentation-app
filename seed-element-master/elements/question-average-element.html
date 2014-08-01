@@ -127,7 +127,7 @@
               var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
               return {topic: key, average: avg.avg}; })
             .value();
-        this.npa_score = _.last(avg_arr).average;
+        this.npa_score = _.last(avg_arr).average.toFixed(1);
         var sans_npa = _.initial(avg_arr);
         this.averages_by_topic = _.map(sans_npa, function(elem){return {topic: elem.topic, average: elem.average.toFixed(1)};});
         this.all_average = _.reduce(sans_npa, function(memo, ans) {
