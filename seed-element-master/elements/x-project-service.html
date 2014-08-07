@@ -1,4 +1,7 @@
 <link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../../bower_components/polymer-jsonp/polymer-jsonp.html">
+<script type="text/javascript" src="../../bower_components/underscore/underscore.js"></script>  
+
 <polymer-element name="x-project-service" attributes="projects">
   <template>
     <style>
@@ -6,24 +9,36 @@
         display: none;
       }
     </style>
-    <core-ajax 
-    id="ajax"
-    auto
-    url="/feedbackapp/api/projects"
-    handleAs="json"
-    on-core-response="{{handleResponse}}"></core-ajax>
+    <!--polymer-jsonp auto url="https://clients1.google.com/finance/info?q=GOOG&client=ig&callback="></polymer-jsonp-->
+    <polymer-jsonp id="jsonp" auto url="https://script.google.com/a/macros/futurice.com/s/AKfycbwWzUdf3BANxONAJF3FpsU8AX-_c0VNeJfXH0CMZ0Lg/dev?prefix="></polymer-jsonp>
   </template>
   <script>
     Polymer('x-project-service', {
       projects: [],
       ready: function() {
-        this.setFavorite = function (uid, favorite) {
-          console.log("UID: "+uid+", favorite: "+favorite);
-        };
+        var jsonp = this.$.jsonp;
+        jsonp.addEventListener("polymer-response", 
+          function(e) {
+            var data = e.detail.response;
+            var projects = _.chain(data)
+                            .rest(3)
+                            .map(function(project) {
+                                return _.chain(_.rest(_.zip.apply(_, data), 7))
+                                        .rest(3)
+                                        .map(function(elem){
+                                          return { questions: _.chain(elem)
+                                                               .map(function(answer){
+                                                                   return {'topic': elem[0], 'question': elem[1], 'answer': answer};
+                                                               })
+                                                               .value() };
+                                                  })
+                                        .value();
+                            })
+                            .value();
+            this.projects = projects;
+          }
+        );
       },
-      handleResponse: function(){
-        this.projects = this.$.ajax.response;
-      }
     });
   </script>
 </polymer-element>
