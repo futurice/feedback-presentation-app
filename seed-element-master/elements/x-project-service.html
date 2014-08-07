@@ -20,19 +20,29 @@
         jsonp.addEventListener("polymer-response", 
           function(e) {
             var data = e.detail.response;
+            var question_topics = _.chain(_.rest(_.zip.apply(_, data), 7))
+                                   .map(function(elem){
+                                     return _.first(elem, 2); 
+                                     })
+                                   .value();
+
             var projects = _.chain(data)
                             .rest(3)
                             .map(function(project) {
-                                return _.chain(_.rest(_.zip.apply(_, data), 7))
-                                        .rest(3)
-                                        .map(function(elem){
-                                          return { questions: _.chain(elem)
-                                                               .map(function(answer){
-                                                                   return {'topic': elem[0], 'question': elem[1], 'answer': answer};
-                                                               })
-                                                               .value() };
-                                                  })
-                                        .value();
+                              return { 
+                                questions: _.chain(project)
+                                            .rest(7)
+                                            .zip(question_topics)
+                                            .map(function(elem) { return { topic: elem[1][0], question: elem[1][1], answer: elem[0] } ; })
+                                            .value(),
+                                project_name: project[0],
+                                project_manager: project[1],
+                                date: project[2],
+                                customer_company: project[3],
+                                customer_contact: project[4],
+                                npa_score: project[5],
+                                comment: project[6]
+                              }; 
                             })
                             .value();
             this.projects = projects;
