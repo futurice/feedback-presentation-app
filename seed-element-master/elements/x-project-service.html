@@ -14,7 +14,6 @@
   </template>
   <script>
     Polymer('x-project-service', {
-      projects: [],
       ready: function() {
         var jsonp = this.$.jsonp;
         jsonp.addEventListener("polymer-response", 
@@ -44,6 +43,7 @@
                                 comment: project[6]
                               }; 
                             })
+                            .map(function(p){ return {'key': p.project_name, 'value': p};})
                             .value();
             this.projects = projects;
           }
