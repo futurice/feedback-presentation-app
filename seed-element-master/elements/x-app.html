@@ -100,12 +100,6 @@
               </div>
             </div>
             <div horizontal layout center flex>
-              <object class="menuicon" data="/feedbackapp/icons/tribes-icon.svg" type="image/svg+xml"></object> 
-              <div>
-                <core-input id="tribe_input" placeholder="Tribe" on-input={{onFilterInput}} flex></core-input>
-              </div>
-            </div>
-            <div horizontal layout center flex>
               <object class="menuicon" data="/feedbackapp/icons/customer-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="customer_input" placeholder="Customer" on-input={{onFilterInput}} flex></core-input>
@@ -141,7 +135,7 @@
   Polymer('x-app', 
     {
     keywords: '',
-    filter: { project: '', tribe: '', customer_company: '', customer_contact: ''},
+    filter: { project: '', customer_company: '', customer_contact: ''},
     selectedSectionNumber: 0, 
     allProjectsChanged: function(oldvalue, newvalue)
     {
@@ -150,7 +144,6 @@
     },
     onFilterInput: function(event, detail, sender) {
       this.filter.project = this.$.project_input.inputValue; 
-      this.filter.tribe = this.$.tribe_input.inputValue; 
       this.filter.customer_company = this.$.customer_input.inputValue;
       this.filter.customer_contact = this.$.contact_input.inputValue; 
       this.firstProjectIndex = 0;
@@ -161,10 +154,9 @@
       var keywords = [];
       p = _.filter(p, function(proj) {
         var retval = true
-        if(tmp_filter.project != '') if(retval &= proj.value.project_name.substring(0, tmp_filter.project.length) === tmp_filter.project) keywords.push(proj.value.project_name); 
-        if(tmp_filter.customer_company != '') if(retval &= proj.value.customer_company.substring(0, tmp_filter.customer_company.length) === tmp_filter.customer_company) keywords.push(proj.value.customer_company); 
-        if(tmp_filter.customer_contact != '') if(retval &= proj.value.customer_contact.substring(0, tmp_filter.customer_contact.length) === tmp_filter.customer_contact) keywords.push(proj.value.customer_contact); 
-        if(tmp_filter.tribe != '') if(retval &= proj.value.tribe.substring(0, tmp_filter.tribe.length) === tmp_filter.tribe) keywords.push(proj.value.tribe); 
+        if(tmp_filter.project != '') if(retval &= proj.value.project_name.toLowerCase().substring(0, tmp_filter.project.length) === tmp_filter.project.toLowerCase()) keywords.push(proj.value.project_name); 
+        if(tmp_filter.customer_company != '') if(retval &= proj.value.customer_company.toLowerCase().substring(0, tmp_filter.customer_company.length) === tmp_filter.customer_company.toLowerCase()) keywords.push(proj.value.customer_company); 
+        if(tmp_filter.customer_contact != '') if(retval &= proj.value.customer_contact.toLowerCase().substring(0, tmp_filter.customer_contact.length) === tmp_filter.customer_contact.toLowerCase()) keywords.push(proj.value.customer_contact); 
         return retval;
       });
       this.keywords = _.uniq(keywords)
