@@ -11,7 +11,7 @@
       }
       #notfound
       {
-        background-color: red;
+        background-color: #6bc177;
       }
       .icon
       {
@@ -31,7 +31,7 @@
         </template>
       </template>
       <div id="next" style="background-color: {{backgrounds[availableSpace]}}" on-tap={{more_tap}} hidden?="{{ !(projects.length > availableSpace)}}" flex vertical layout center center-justified>
-          <object class="icon" data="/icons/dots.svg" type="image/svg+xml"></object>
+          <object class="icon" data="/feedbackapp/icons/dots.svg" type="image/svg+xml"></object>
       </div>
       <div id="notfound" hidden?="{{projects.length > 0}}" flex></div>
       <!--div flex style="background-color: {{backgrounds[5]}}" hidden?="{{count != 6}}"></div-->

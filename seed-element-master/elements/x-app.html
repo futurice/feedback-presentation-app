@@ -91,7 +91,7 @@
         </core-toolbar>
         <div horizontal layout relative fit>
         <!--sidebar menu-->
-        <div vertical flex two justified layout id="sidebar">
+        <div vertical flex two justified layout id="sidebar" hidden="true">
           <div class="menu-block" vertical layout flex two justified style="background-color: #c7c7c7; margin-top:64px">
             <div horizontal layout center flex>
               <object class="menuicon" data="/feedbackapp/icons/project-name-icon.svg" type="image/svg+xml"></object> 
@@ -178,6 +178,7 @@
             {duration: 150, fill: 'forwards'}));
         }
       else {
+        this.$.sidebar.hidden = false;
         var player = document.timeline.play(new Animation(sidebar, [
             {maxWidth: "0%"},
             {maxWidth: "25%"}
