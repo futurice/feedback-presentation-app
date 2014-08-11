@@ -13,12 +13,9 @@
         user-select: none;
       }
   
-      .circle {
-        opacity: 0.6;
-        margin: auto;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
+      .column {
+        -webkit-transition: all 2s;
+        transition: all 2s;
       }
 
       .spec {
@@ -59,80 +56,44 @@
       {
         font-size: 30px;
         margin: 10px;
+        text-align:center;
       }
 
     </style>
-    <div vertical layout relative fit>
-
-      <div horizontal flex two justified layout center>
-          <div vertical flex>
-            <div flex relative>
-              <svg class="circle" width="{{npa_score/10.0 * 100}}%" viewBox="0 0 100 100">
-                <circle r="50" cx="50" cy="50" fill={{backgrounds[1]}} />
-              </svg>
-              <div class="spec" vertical center-justified layout>
-                <div id="question">NPA</div>
-                <div class="avg-number">{{npa_score}}</div>
-              </div>
-            </div>
-          </div>
-
-          <div vertical flex>
-            <div flex relative> 
-              <svg class="circle" width="{{all_average/5.0 * 100}}%" viewBox="0 0 100 100">
-                <circle r="50" cx="50" cy="50" fill={{backgrounds[4]}} />
-              </svg>
-              <div class="spec" vertical center-justified layout>
-                  <div id="question">All</div>
-                  <div class="avg-number">{{all_average}}</div>
-              </div>
-            </div>
-          </div>
-      </div>
-
-      <div horizontal flex justified layout center>
+      <div id="root" horizontal justified layout relative fit>
           <template repeat="{{ avg, avgIndex in averages_by_topic }}">
-            <div vertical flex>
-              <div flex relative>
-                <svg class="circle" width="{{avg.average/5.0 * 100}}%" viewBox="0 0 100 100">
-                  <circle r="50" cx="50" cy="50" fill={{backgrounds[avgIndex]}} />
-                </svg>
-                <div class="spec" vertical center-justified layout>
-                  <div class="avg-number">{{avg.average}}</div>
-                </div>
-              </div>
-              <div flex id="question">{{avg.topic}}</div>
+            <div vertical end-justified layout flex style="height: 100%">
+            <div id="{{avg.topic}}" class="column" flex justified vertical layout style="max-height:{{(avg.average / 5.0) * 100}}%; background-color: {{backgrounds[avgIndex]}}">
+              <div  class="avg-number" flex start-justified vertical layout>{{avg.average}}</div>
+              <div flex id="question" end-justified vertical layout>{{avg.topic}}</div>
             </div>
+           <div>
           </template>
       </div>
 
-    </div>
   </template>
   <script>
   Polymer('question-average-element', {
-    backgrounds: ['#67b672', '#64ad6e', '#60a66a', '#5c9d65', '#57905f'],
+    backgrounds: ['#64ba6f', '#60b36b', '#5cab66', '#57a362', '#539c5d', '#4f9458', '#4f9458', '#46824e', '#427a49', '#3e7345'],
     projectsChanged: function(oldvalue, newvalue)
     {
-        var avg_arr = _.chain(newvalue)
-            .reduce(function(memo, val){ return memo.concat(val.value.questions).concat({topic: 'npa_score', answer: val.value.npa_score}); }, [])
+        var THIS = this;
+        _.chain(newvalue)
+            .reduce(function(memo, val){ return memo.concat(val.value.questions).concat({topic: 'Overall', answer: val.value.npa_score}); }, [])
             .groupBy(function(val){ return val.topic; })
             .map(function(value, key){
               var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
-              return {topic: key, average: avg.avg}; })
-            .value();
-	if(avg_arr.length > 0) {
-		this.npa_score = _.last(avg_arr).average.toFixed(1);
-		var sans_npa = _.initial(avg_arr);
-		this.averages_by_topic = _.map(sans_npa, function(elem){return {topic: elem.topic, average: elem.average.toFixed(1)};});
-		this.all_average = _.reduce(sans_npa, function(memo, ans) {
-		  return {i : (memo.i + 1), avg: (memo.avg * memo.i + parseFloat(ans.average))/(memo.i+1)} }, {i: 0, avg: 0.0}).avg.toFixed(1); 
-	}
-  else {
-		this.npa_score = 0;
-		this.averages_by_topic = [];
-		this.all_average = 0;
-
-  }
+              return {topic: key, average: avg.avg.toFixed(1)}; })
+            .value()
+            .forEach(function(elem){
+              if(THIS.averages_by_topic == null) THIS.averages_by_topic = [];
+              var same_topic = _.find(THIS.averages_by_topic, function(avg){ return avg.topic === elem.topic; });
+              if(same_topic != null)
+                same_topic.average = elem.average; 
+              else
+                THIS.averages_by_topic.push(elem);
+            });
+        //one time bind topics
     },
     ready: function(){
     }

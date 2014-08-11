@@ -16,6 +16,7 @@
     Polymer('x-project-service', {
       ready: function() {
         var jsonp = this.$.jsonp;
+        var element = this;
         jsonp.addEventListener("polymer-response", 
           function(e) {
             var data = e.detail.response;
@@ -45,7 +46,7 @@
                             })
                             .map(function(p){ return {'key': p.project_name, 'value': p};})
                             .value();
-            this.projects = projects;
+          element.projects = projects;
           }
         );
       },
