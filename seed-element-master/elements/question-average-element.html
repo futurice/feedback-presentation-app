@@ -63,7 +63,7 @@
       <div id="root" horizontal justified layout relative fit>
           <template repeat="{{ avg, avgIndex in averages_by_topic }}">
             <div vertical end-justified layout flex style="height: 100%">
-            <div id="{{avg.topic}}" class="column" flex justified vertical layout style="max-height:{{avg.average >= 5.0 ? (avg.average / 10.0) * 100 : (avg.average / 5.0) * 100}}%; background-color: {{backgrounds[avgIndex]}}">
+            <div id="{{avg.topic}}" class="column" flex justified vertical layout style="max-height:{{avg.topic === 'Overall' ? (avg.average / 10.0) * 100 + 10 : (avg.average / 5.0) * 100 + 10}}%; background-color: {{backgrounds[avgIndex]}}">
               <div  class="avg-number" flex start-justified vertical layout>{{avg.average > 0.0 ? avg.average : ''}}</div>
               <div flex id="question" end-justified vertical layout>{{avg.topic}}</div>
             </div>
@@ -79,7 +79,7 @@
     {
         var THIS = this;
        var avg_arr = _.chain(newvalue)
-            .reduce(function(memo, val){ return memo.concat(val.value.questions).concat({topic: 'Overall', answer: val.value.npa_score}); }, [])
+            .reduce(function(memo, val){ return memo.concat({topic: 'Overall', answer: val.value.npa_score}).concat(val.value.questions); }, [])
             .groupBy(function(val){ return val.topic; })
             .map(function(value, key){
               var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});

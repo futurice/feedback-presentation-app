@@ -34,6 +34,7 @@
                                             .rest(7)
                                             .zip(question_topics)
                                             .map(function(elem) { return { topic: elem[1][0], question: elem[1][1], answer: elem[0] } ; })
+                                            .filter(function(elem) { return elem.answer !== "";})
                                             .value(),
                                 project_name: project[0],
                                 project_manager: project[1],
