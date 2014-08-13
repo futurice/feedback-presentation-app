@@ -38,13 +38,15 @@
                                             .value(),
                                 project_name: project[0],
                                 project_manager: project[1],
-                                date: project[2],
+                                date: Date.parse(project[2]),
                                 customer_company: project[3],
                                 customer_contact: project[4],
                                 npa_score: project[5],
                                 comment: project[6]
                               }; 
                             })
+                            .sortBy(function(elem) { return elem.date; })
+                            .reverse()
                             .map(function(p){ return {'key': p.project_name, 'value': p};})
                             .value();
           element.projects = projects;

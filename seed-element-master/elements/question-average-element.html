@@ -63,7 +63,7 @@
       <div id="root" horizontal justified layout relative fit>
           <template repeat="{{ avg, avgIndex in averages_by_topic }}">
             <div vertical end-justified layout flex style="height: 100%">
-            <div id="{{avg.topic}}" class="column" flex justified vertical layout style="max-height:{{avg.topic === 'Overall' ? (avg.average / 10.0) * 100 + 10 : (avg.average / 5.0) * 100 + 10}}%; background-color: {{backgrounds[avgIndex]}}">
+            <div id="{{avg.topic}}" class="column" flex justified vertical layout style="max-height:{{avg.topic === 'Overall' ? (avg.average / 10.0) * 80 + 10 : (avg.average / 5.0) * 80 + 10}}%; background-color: {{backgrounds[avgIndex]}}">
               <div  class="avg-number" flex start-justified vertical layout>{{avg.average > 0.0 ? avg.average : ''}}</div>
               <div flex id="question" end-justified vertical layout>{{avg.topic}}</div>
             </div>

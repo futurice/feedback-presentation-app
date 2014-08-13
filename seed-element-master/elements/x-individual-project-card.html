@@ -76,7 +76,11 @@
       #question
       {
         text-align: right;
-        margin-right: 50px;
+      }
+
+      .star-rating
+      {
+        padding-left: 25px;
       }
 
       #rootgrid
@@ -90,18 +94,22 @@
     </style>
       <div style="background-color: {{background}}" relative fit>
       <div id="rootgrid" vertical layout center justified relative fit>
-        <div class="header" vertical end-justified layout flex>{{project.key}}</div>
+        <div class="header" vertical end-justified layout flex>
+          <div>{{project.key}}</div>
+          <div>{{project.value.customer_company}}</div>
+          <div>{{project.value.project_manager}}</div>
+        </div>
         <div id="detail_section" vertical layout flex two>
           <div id="npa_header">Overall</div>
             <div id="npa_number">{{project.value.npa_score}}</div>
           <template repeat="{{ t in groupedTopics(project.value.questions) }}">
             <div horizontal justified center layout>
             <div flex center id="question">{{t.topic}}</div>
-            <star-rating-element flex nStars="{{t.average}}"></star-rating-element>
+            <star-rating-element class="star-rating" flex nStars="{{t.average}}"></star-rating-element>
             </div>
           </template>
         </div>
-        <div class="header" vertical end-justified layout flex>{{project.value.project_manager}}</div>
+        <div class="header" vertical end-justified layout flex>{{formatDate(project.value.date)}}</div>
       </div>
       </div>
   </template>
@@ -146,8 +154,10 @@
             ],
             {duration: 150, fill: 'forwards'}) );
     },
+    formatDate: function(date) {
+      return new Date(date).toDateString();
+    },
     ready: function(){
     }
-  });
-  </script>
+  }); </script>
 </polymer-element>

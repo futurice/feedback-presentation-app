@@ -19,7 +19,16 @@
       :host {
         display: block;
        font-family: 'Quattrocento Sans', sans-serif;
+        background: #6bc177;
       }
+
+      .view
+      {
+
+        webkit-transition: all 0.15s; 
+        transition: all 0.15s; 
+      }
+
      #core_toolbar {
         text-align: center;
         z-index: 1;
@@ -43,6 +52,7 @@
       .menu-block:hover
       {
         opacity: 0.9;
+        transition: all 1s; 
       }
       .menuicon
       {
@@ -84,6 +94,7 @@
       <div flex id="root-grid">
         <core-toolbar id="core_toolbar">
           <core-icon-button icon="menu" on-tap={{menu_button_tap}}></core-icon-button>
+          <core-icon-button icon="home" on-tap={{home_button_tap}}></core-icon-button>
           <div vertical flex layout>
           <div flex layout>Futurice Feedback</div>
           </div>
@@ -93,19 +104,19 @@
         <div vertical flex two justified layout id="sidebar" hidden="true">
           <div class="menu-block" vertical layout flex two justified style="background-color: #c7c7c7; margin-top:64px">
             <div horizontal layout center flex>
-              <object class="menuicon" data="/feedbackapp/icons/project-name-icon.svg" type="image/svg+xml"></object> 
+              <object class="menuicon" data="/icons/project-name-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="project_input" placeholder="Project name" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
             <div horizontal layout center flex>
-              <object class="menuicon" data="/feedbackapp/icons/customer-icon.svg" type="image/svg+xml"></object> 
+              <object class="menuicon" data="/icons/customer-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="customer_input" placeholder="Customer" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
             <div horizontal layout center flex>
-              <object class="menuicon" data="/feedbackapp/icons/contact-icon2.svg" type="image/svg+xml"></object> 
+              <object class="menuicon" data="/icons/contact-icon2.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="contact_input" placeholder="Project manager" on-input={{onFilterInput}} flex></core-input>
               </div>
@@ -115,16 +126,16 @@
             </div>
           </div>
           <div class="menu-block" on-tap={{averageMenuButtonTapped}} horizontal layout flex center style="background-color: #b6b6b6">
-            <object class="menuicon" data='/feedbackapp/icons/average-star.svg' type="image/svg+xml"></object>
+            <object class="menuicon" data='/icons/average-star.svg' type="image/svg+xml"></object>
             <div>Average Scores</div>
           </div>
           <div class="menu-block" on-tap={{hofMenuButtonTapped}} horizontal layout flex center style="background-color: #acacac">
-            <object class="menuicon" data='/feedbackapp/icons/trophy.svg' type="image/svg+xml"></object>
+            <object class="menuicon" data='/icons/trophy.svg' type="image/svg+xml"></object>
             <div>Projects</div>
           </div>
         </div>
-        <x-project-answer-list flex center hidden?="{{!(selectedSectionNumber == 0)}}" projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
-        <question-average-element hidden?="{{!(selectedSectionNumber == 1)}}" projects={{projects}} flex center></question-average-element>
+        <x-project-answer-list id="project_answer_list" class="view" flex center  projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
+        <question-average-element id="question_average_element" class="view" projects={{projects}} flex center></question-average-element>
         </div>
       </div>
 
@@ -186,10 +197,17 @@
         this.availableSpaceForProjectCards = 4;
         }
     },
+    home_button_tap: function(event, detail, sender) {
+        this.firstProjectIndex = 0; 
+    },
     averageMenuButtonTapped: function(event, detail, sender) {
+      this.$.project_answer_list.style.maxWidth = '0%';
+      this.$.question_average_element.style.maxWidth = '100%'
       this.selectedSectionNumber = 1;
     },
     hofMenuButtonTapped: function(event, detail, sender) {
+      this.$.project_answer_list.style.maxWidth = '100%';
+      this.$.question_average_element.style.maxWidth = '0%'
       this.selectedSectionNumber = 0;
     },
     ready: function(){
