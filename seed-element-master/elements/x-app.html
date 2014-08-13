@@ -103,11 +103,14 @@
         <!--sidebar menu-->
         <div vertical flex two justified layout id="sidebar" hidden="true">
           <div class="menu-block" vertical layout flex two justified style="background-color: #c7c7c7; margin-top:64px">
-            <div horizontal layout center flex>
+            <div horizontal layout center flex style="margin-top:20px">
               <object class="menuicon" data="/icons/project-name-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="project_input" placeholder="Project name" on-input={{onFilterInput}} flex></core-input>
               </div>
+            </div>
+            <div id="keywords" horizontal layout center flex>
+                <div>{{keywords[0]}}</div>
             </div>
             <div horizontal layout center flex>
               <object class="menuicon" data="/icons/customer-icon.svg" type="image/svg+xml"></object> 
@@ -115,14 +118,17 @@
                 <core-input id="customer_input" placeholder="Customer" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
+            <div id="keywords" horizontal layout center flex>
+                <div>{{keywords[1]}}</div>
+            </div>
             <div horizontal layout center flex>
               <object class="menuicon" data="/icons/contact-icon2.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="contact_input" placeholder="Project manager" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
-            <div id="keywords" horizontal layout center flex two>
-                <div>{{keywords}}</div>
+            <div id="keywords" horizontal layout center flex>
+                <div>{{keywords[2]}}</div>
             </div>
           </div>
           <div class="menu-block" on-tap={{averageMenuButtonTapped}} horizontal layout flex center style="background-color: #b6b6b6">
@@ -145,7 +151,7 @@
   Polymer('x-app', 
     {
     keywords: '',
-    filter: { project: '', customer_company: '', customer_contact: ''},
+    filter: { project: '', customer_company: '', project_manager: ''},
     selectedSectionNumber: 0, 
     allProjectsChanged: function(oldvalue, newvalue)
     {
@@ -155,22 +161,24 @@
     onFilterInput: function(event, detail, sender) {
       this.filter.project = this.$.project_input.inputValue; 
       this.filter.customer_company = this.$.customer_input.inputValue;
-      this.filter.customer_contact = this.$.contact_input.inputValue; 
+      this.filter.project_manager = this.$.contact_input.inputValue; 
       this.firstProjectIndex = 0;
       this.projects = this.filterProjects(this.allProjects);  
     },
     filterProjects: function(p) {
       var tmp_filter = this.filter;
-      var keywords = [];
+      var keywords = [[], [], []];
       p = _.filter(p, function(proj) {
         var retval = true
-        if(tmp_filter.project != '') if(retval &= proj.value.project_name.toLowerCase().substring(0, tmp_filter.project.length) === tmp_filter.project.toLowerCase()) keywords.push(proj.value.project_name); 
-        if(tmp_filter.customer_company != '') if(retval &= proj.value.customer_company.toLowerCase().substring(0, tmp_filter.customer_company.length) === tmp_filter.customer_company.toLowerCase()) keywords.push(proj.value.customer_company); 
-        if(tmp_filter.customer_contact != '') if(retval &= proj.value.customer_contact.toLowerCase().substring(0, tmp_filter.customer_contact.length) === tmp_filter.customer_contact.toLowerCase()) keywords.push(proj.value.customer_contact); 
+        if(tmp_filter.project != '') 
+          if(retval &= proj.value.project_name.toLowerCase().substring(0, tmp_filter.project.length) === tmp_filter.project.toLowerCase()) keywords[0].push(proj.value.project_name); 
+        if(tmp_filter.customer_company != '') 
+          if(retval &= proj.value.customer_company.toLowerCase().substring(0, tmp_filter.customer_company.length) === tmp_filter.customer_company.toLowerCase()) keywords[1].push(proj.value.customer_company); 
+        if(tmp_filter.project_manager != '') 
+          if(retval &= proj.value.project_manager.toLowerCase().substring(0, tmp_filter.project_manager.length) === tmp_filter.project_manager.toLowerCase()) keywords[2].push(proj.value.project_manager); 
         return retval;
       });
-      this.keywords = _.uniq(keywords)
-       .join(', ');
+      this.keywords = _.map(keywords, function(arr) { return _.chain(arr).uniq().join(', ').value(); });
       return p;
     },
     menuHidden: true,
@@ -198,6 +206,7 @@
         }
     },
     home_button_tap: function(event, detail, sender) {
+      this.selectedSectionNumber = 0;
         this.firstProjectIndex = 0; 
     },
     averageMenuButtonTapped: function(event, detail, sender) {
