@@ -134,8 +134,8 @@
             <div>Projects</div>
           </div>
         </div>
-        <x-project-answer-list id="project_answer_list" class="view" flex center  projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
-        <question-average-element id="question_average_element" class="view" projects={{projects}} flex center></question-average-element>
+        <x-project-answer-list id="project_answer_list" class="view" flex center  hidden?="{{selectedSectionNumber == 1}}" projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
+        <question-average-element id="question_average_element" class="view" hidden?="{{selectedSectionNumber == 0}}" projects={{projects}} flex center></question-average-element>
         </div>
       </div>
 
@@ -201,13 +201,9 @@
         this.firstProjectIndex = 0; 
     },
     averageMenuButtonTapped: function(event, detail, sender) {
-      this.$.project_answer_list.style.maxWidth = '0%';
-      this.$.question_average_element.style.maxWidth = '100%'
       this.selectedSectionNumber = 1;
     },
     hofMenuButtonTapped: function(event, detail, sender) {
-      this.$.project_answer_list.style.maxWidth = '100%';
-      this.$.question_average_element.style.maxWidth = '0%'
       this.selectedSectionNumber = 0;
     },
     ready: function(){
