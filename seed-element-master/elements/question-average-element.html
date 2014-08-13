@@ -2,7 +2,7 @@
 <script type="text/javascript" src="../../bower_components/underscore/underscore.js"></script>  
 <script type="text/javascript" src="../../jthread/jThread.js"></script>  
 
-<polymer-element name="question-average-element" attributes="projects background filter">
+<polymer-element name="question-average-element" attributes="projects background filter spinnerHidden">
   <template>
     <style>
       :host {
@@ -13,7 +13,6 @@
         overflow: hidden;
         user-select: none;
       }
-  
       .column {
         -webkit-transition: all 2s;
         transition: all 2s;
@@ -75,40 +74,37 @@
   </template>
   <script>
   Polymer('question-average-element', {
+    spinnerHidden: true,
     backgrounds: ['#64ba6f', '#60b36b', '#5cab66', '#57a362', '#539c5d', '#4f9458', '#46824e', '#427a49', '#3e7345', '#64ba6f', '#60b36b', '#5cab66', '#57a362', '#539c5d', '#4f9458', '#46824e', '#427a49', '#3e7345'],
     projectsChanged: function(oldvalue, newvalue)
     {
         var THIS = this;
-        var thread = jThread(function(newvalue) {
-         return _.chain(newvalue)
-              .reduce(function(memo, val){ return memo.concat({topic: 'Overall', answer: val.value.npa_score}).concat(val.value.questions); }, [])
-              .groupBy(function(val){ return val.topic; })
-              .map(function(value, key){
-                var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
-                return {topic: key, average: avg.avg.toFixed(1)}; })
-              .value();
-              }, function(avg_arr) {
-                if(avg_arr.length > 0) {
-                avg_arr.forEach(function(elem){
-                      if(THIS.averages_by_topic == null) THIS.averages_by_topic = [];
-                      var same_topic = _.find(THIS.averages_by_topic, function(avg){ return avg.topic === elem.topic; });
-                      if(same_topic != null)
-                        same_topic.average = elem.average; 
-                      else
-                        THIS.averages_by_topic.push(elem);
-                        });
-                }
-                else {
-                  THIS.averages_by_topic.forEach(function(elem){elem.average = 0;});
-                }
-              });
-          thread(newvalue);
-
-        
-        //one time bind topics
+        if(this.worker != null) this.worker.terminate();
+        this.worker = new Worker('/seed-element-master/elements/worker.js');
+        this.spinnerHidden = false;
+        this.worker.addEventListener('message', function(e) {
+          var avg_arr = e.data;
+          if(avg_arr.length > 0) {
+            avg_arr.forEach(function(elem){
+            if(THIS.averages_by_topic == null) THIS.averages_by_topic = [];
+            var same_topic = _.find(THIS.averages_by_topic, function(avg){ return avg.topic === elem.topic; });
+            if(same_topic != null)
+              same_topic.average = elem.average; 
+            else
+              THIS.averages_by_topic.push(elem);
+            });
+          }
+          else {
+            if(THIS.averages_by_topic != null)
+              THIS.averages_by_topic.forEach(function(elem){elem.average = 0;});
+          } 
+          THIS.spinnerHidden = true;
+        }, false);
+      this.worker.postMessage(newvalue);
     },
     ready: function(){
-    }
-  });
+          
+     }
+    });
   </script>
 </polymer-element>
