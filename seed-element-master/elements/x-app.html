@@ -92,6 +92,7 @@
         height: 40px;
         position: relative;
         text-align: center;
+        transition: opacity 0.15s;
         
         -webkit-animation: rotate 2.0s infinite linear;
         animation: rotate 2.0s infinite linear;
@@ -105,9 +106,22 @@
         top: 0;
         background-color: white;
         border-radius: 100%;
+        transition: opacity 0.15s;
         
         -webkit-animation: bounce 2.0s infinite ease-in-out;
         animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .menu-block core-input
+      {
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid rgba(255,255,255, 0.5);
+      }
+
+      .menu-block core-input:focus
+      {
+        border-color: white;
       }
 
       .dot2 {
@@ -158,7 +172,7 @@
             <div horizontal layout center flex style="margin-top:20px">
               <object class="menuicon" data="/icons/project-name-icon.svg" type="image/svg+xml"></object> 
               <div>
-                <core-input id="project_input" placeholder="Project name" on-input={{onFilterInput}} flex></core-input>
+                <core-input id="project_input" placeholder="Project name" style="" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
             <div id="keywords" horizontal layout center flex>
@@ -205,6 +219,7 @@
     keywords: '',
     filter: { project: '', customer_company: '', project_manager: ''},
     selectedSectionNumber: 0, 
+    spinnerHidden: false,
     allProjectsChanged: function(oldvalue, newvalue)
     {
       this.projects = this.filterProjects(this.allProjects);

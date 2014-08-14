@@ -5,8 +5,8 @@ self.addEventListener('message', function(e) {
     .reduce(function(memo, val){ return memo.concat({topic: 'Overall', answer: val.value.npa_score}).concat(val.value.questions); }, [])
     .groupBy(function(val){ return val.topic; })
     .map(function(value, key){
-      var avg = _.reduce(value, function(memo, ans) {return {i : (memo.i + 1), avg: (memo.avg * memo.i + ans.answer)/(memo.i+1)} }, {i: 0, avg: 0.0});
-      return {topic: key, average: avg.avg.toFixed(1)}; })
+      var avg = _.reduce(value, function(memo, ans) {return [(memo[0] * memo[1] + ans.answer)/(memo[1]+1), (memo[1] + 1)] }, [0, 0]);
+      return {topic: key, average: avg[0].toFixed(1)}; })
     .value();
     self.postMessage(avg_arr);
 }, false);
