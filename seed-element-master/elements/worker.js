@@ -1,5 +1,5 @@
 self.addEventListener('message', function(e) {
-  importScripts("http://localhost:5000/bower_components/underscore/underscore.js");
+  importScripts("https://feedbak.futurice.com/bower_components/underscore/underscore.js");
   var data = e.data;
   var avg_arr =  _.chain(data)
     .reduce(function(memo, val){ return memo.concat({topic: 'Overall', answer: val.value.npa_score}).concat(val.value.questions); }, [])
