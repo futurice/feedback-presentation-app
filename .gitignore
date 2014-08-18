@@ -1,3 +1,4 @@
 *.swp
 *.*.swp
 salesforce-credentials.js
+app-script-password.js

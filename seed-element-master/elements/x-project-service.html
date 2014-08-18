@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
-<link rel="import" href="../../bower_components/polymer-jsonp/polymer-jsonp.html">
 <script type="text/javascript" src="../../bower_components/underscore/underscore.js"></script>  
 
 <polymer-element name="x-project-service" attributes="projects">
@@ -10,14 +9,14 @@
       }
     </style>
     <!--polymer-jsonp auto url="https://clients1.google.com/finance/info?q=GOOG&client=ig&callback="></polymer-jsonp-->
-    <polymer-jsonp id="jsonp" auto url="https://script.google.com/a/macros/futurice.com/s/AKfycbwWzUdf3BANxONAJF3FpsU8AX-_c0VNeJfXH0CMZ0Lg/dev?prefix="></polymer-jsonp>
+    <core-ajax id="ajax" auto url="/api" handleAs="json"></core-ajax>
   </template>
   <script>
     Polymer('x-project-service', {
       ready: function() {
-        var jsonp = this.$.jsonp;
+        var ajax = this.$.ajax;
         var element = this;
-        jsonp.addEventListener("polymer-response", 
+        ajax.addEventListener("core-response", 
           function(e) {
             var data = e.detail.response;
             var question_topics = _.chain(_.rest(_.zip.apply(_, data), 7))
