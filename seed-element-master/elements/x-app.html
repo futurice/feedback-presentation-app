@@ -77,7 +77,6 @@
         max-width: 0%;
         margin-top: 0px;
         color: #fff;
-        cursor: pointer;
       }
 
       #keywords {
@@ -197,16 +196,17 @@
                 <div>{{keywords[2]}}</div>
             </div>
           </div>
-          <div class="menu-block" on-tap={{averageMenuButtonTapped}} horizontal layout flex center style="background-color: #b6b6b6">
+          <div class="menu-block" on-tap={{averageMenuButtonTapped}} horizontal layout flex center style="background-color: #b6b6b6; cursor: pointer;">
+        
             <object class="menuicon" data='/icons/average-star.svg' type="image/svg+xml"></object>
             <div>Average Scores</div>
           </div>
-          <div class="menu-block" on-tap={{hofMenuButtonTapped}} horizontal layout flex center style="background-color: #acacac">
+          <div class="menu-block" on-tap={{hofMenuButtonTapped}} horizontal layout flex center style="background-color: #acacac; cursor: pointer;">
             <object class="menuicon" data='/icons/trophy.svg' type="image/svg+xml"></object>
             <div>Projects</div>
           </div>
         </div>
-        <x-project-answer-list id="project_answer_list" class="view" flex center  hidden?="{{selectedSectionNumber == 1}}" projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
+        <x-project-answer-list id="project_answer_list" class="view" flex center style="height: 100%" hidden?="{{selectedSectionNumber == 1}}" projects="{{projects}}" availableSpace="{{availableSpaceForProjectCards}}" startIndex="{{firstProjectIndex}}"></x-project-answer-list>
         <question-average-element id="question_average_element" class="view" spinnerHidden={{spinnerHidden}} hidden?="{{selectedSectionNumber == 0}}" projects={{projects}} flex center></question-average-element>
         </div>
       </div>

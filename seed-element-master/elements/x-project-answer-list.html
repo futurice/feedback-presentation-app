@@ -1,5 +1,6 @@
 <link rel="import" href="../../seed-element-master/elements/x-individual-project-card.html">
 <link rel="import" href="../../bower_components/core-animation/web-animations.html">
+<link rel="import" href="../../bower_components/core-icon/core-icon.html">
 <script type="text/javascript" src="../../bower_components/underscore/underscore.js"></script>  
 
 <polymer-element name="x-project-answer-list" attributes="projects availableSpace startIndex searchString">
@@ -24,14 +25,14 @@
 
     </style>
 
-    <div horizontal flex justify layout>
+    <div style="height: 100%" horizontal flex justify layout>
       <template repeat="{{ p, pIndex in projects }}">
         <template if="{{pIndex >= startIndex && pIndex < (startIndex + availableSpace)}}">
           <x-individual-project-card flex project={{p}} background="{{backgrounds[pIndex - startIndex]}}" on-tap={{card_tap}}></x-individual-project-card>
         </template>
       </template>
       <div id="next" style="background-color: {{backgrounds[availableSpace]}}" on-tap={{more_tap}} hidden?="{{ !(projects.length > availableSpace)}}" flex vertical layout center center-justified>
-          <object class="icon" data="/icons/dots.svg" type="image/svg+xml"></object>
+          <core-icon class="icon next" on-tap={{more_tap}} src="/icons/dots.svg"></core-icon>
       </div>
       <div id="notfound" hidden?="{{projects.length > 0}}" flex></div>
       <!--div flex style="background-color: {{backgrounds[5]}}" hidden?="{{count != 6}}"></div-->
