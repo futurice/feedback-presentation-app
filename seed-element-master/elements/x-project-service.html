@@ -18,8 +18,9 @@
         var element = this;
         ajax.addEventListener("core-response", 
           function(e) {
+            //backend serves data from spreadsheets so a little bit of moving it around is in order
             var data = e.detail.response;
-            var question_topics = _.chain(_.rest(_.zip.apply(_, data), 7))
+            var question_topics = _.chain(_.rest(_.zip.apply(_, data), 8))
                                    .map(function(elem){
                                      return _.first(elem, 2); 
                                      })
@@ -30,7 +31,7 @@
                             .map(function(project) {
                               return { 
                                 questions: _.chain(project)
-                                            .rest(7)
+                                            .rest(8)
                                             .zip(question_topics)
                                             .map(function(elem) { return { topic: elem[1][0], question: elem[1][1], answer: elem[0] } ; })
                                             .filter(function(elem) { return elem.answer !== "";})
@@ -41,7 +42,8 @@
                                 customer_company: project[3],
                                 customer_contact: project[4],
                                 npa_score: project[5],
-                                comment: project[6]
+                                comment: project[6],
+                                tribe: project[7]
                               }; 
                             })
                             .sortBy(function(elem) { return elem.date; })

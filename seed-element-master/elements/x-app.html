@@ -167,7 +167,7 @@
         <div horizontal layout relative fit>
         <!--sidebar menu-->
         <div vertical flex two justified layout id="sidebar" hidden="true">
-          <div class="menu-block" vertical layout flex two justified style="background-color: #c7c7c7; margin-top:64px">
+          <div class="menu-block" vertical layout flex three justified style="background-color: #c7c7c7; margin-top:64px">
             <div horizontal layout center flex style="margin-top:20px">
               <object class="menuicon" data="/icons/project-name-icon.svg" type="image/svg+xml"></object> 
               <div>
@@ -178,13 +178,22 @@
                 <div>{{keywords[0]}}</div>
             </div>
             <div horizontal layout center flex>
+              <object class="menuicon" data="/icons/tribes-icon.svg" type="image/svg+xml"></object> 
+              <div>
+                <core-input id="tribe_input" placeholder="Tribe" on-input={{onFilterInput}} flex></core-input>
+              </div>
+            </div>
+            <div id="keywords" horizontal layout center flex>
+                <div>{{keywords[1]}}</div>
+            </div>
+            <div horizontal layout center flex>
               <object class="menuicon" data="/icons/customer-icon.svg" type="image/svg+xml"></object> 
               <div>
                 <core-input id="customer_input" placeholder="Customer" on-input={{onFilterInput}} flex></core-input>
               </div>
             </div>
             <div id="keywords" horizontal layout center flex>
-                <div>{{keywords[1]}}</div>
+                <div>{{keywords[2]}}</div>
             </div>
             <div horizontal layout center flex>
               <object class="menuicon" data="/icons/contact-icon2.svg" type="image/svg+xml"></object> 
@@ -193,7 +202,7 @@
               </div>
             </div>
             <div id="keywords" horizontal layout center flex>
-                <div>{{keywords[2]}}</div>
+                <div>{{keywords[3]}}</div>
             </div>
           </div>
           <div class="menu-block" on-tap={{averageMenuButtonTapped}} horizontal layout flex center style="background-color: #b6b6b6; cursor: pointer;">
@@ -217,7 +226,7 @@
   Polymer('x-app', 
     {
     keywords: '',
-    filter: { project: '', customer_company: '', project_manager: ''},
+    filter: { project: '', customer_company: '', project_manager: '', tribe: ''},
     selectedSectionNumber: 0, 
     spinnerHidden: false,
     allProjectsChanged: function(oldvalue, newvalue)
@@ -227,6 +236,7 @@
     },
     onFilterInput: function(event, detail, sender) {
       this.filter.project = this.$.project_input.inputValue; 
+      this.filter.tribe = this.$.tribe_input.inputValue; 
       this.filter.customer_company = this.$.customer_input.inputValue;
       this.filter.project_manager = this.$.contact_input.inputValue; 
       this.firstProjectIndex = 0;
@@ -234,15 +244,17 @@
     },
     filterProjects: function(p) {
       var tmp_filter = this.filter;
-      var keywords = [[], [], []];
+      var keywords = [[], [], [], []];
       p = _.filter(p, function(proj) {
         var retval = true
         if(tmp_filter.project != '') 
           if(retval &= proj.value.project_name.toLowerCase().substring(0, tmp_filter.project.length) === tmp_filter.project.toLowerCase()) keywords[0].push(proj.value.project_name); 
+        if(tmp_filter.tribe != '') 
+          if(retval &= proj.value.tribe.toLowerCase().substring(0, tmp_filter.tribe.length) === tmp_filter.tribe.toLowerCase()) keywords[1].push(proj.value.tribe); 
         if(tmp_filter.customer_company != '') 
-          if(retval &= proj.value.customer_company.toLowerCase().substring(0, tmp_filter.customer_company.length) === tmp_filter.customer_company.toLowerCase()) keywords[1].push(proj.value.customer_company); 
+          if(retval &= proj.value.customer_company.toLowerCase().substring(0, tmp_filter.customer_company.length) === tmp_filter.customer_company.toLowerCase()) keywords[2].push(proj.value.customer_company); 
         if(tmp_filter.project_manager != '') 
-          if(retval &= proj.value.project_manager.toLowerCase().substring(0, tmp_filter.project_manager.length) === tmp_filter.project_manager.toLowerCase()) keywords[2].push(proj.value.project_manager); 
+          if(retval &= proj.value.project_manager.toLowerCase().substring(0, tmp_filter.project_manager.length) === tmp_filter.project_manager.toLowerCase()) keywords[3].push(proj.value.project_manager); 
         return retval;
       });
       this.keywords = _.map(keywords, function(arr) { return _.chain(arr).uniq().join(', ').value(); });
