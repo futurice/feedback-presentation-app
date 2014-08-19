@@ -98,8 +98,6 @@
           <div>{{project.key}}</div>
         </div>
         <div id="detail_section" vertical layout flex two>
-          <div>{{project.value.customer_company}}</div>
-          <div>{{project.value.project_manager}}</div>
           <div id="npa_header">Overall</div>
             <div id="npa_number">{{project.value.npa_score}}</div>
           <template repeat="{{ t in groupedTopics(project.value.questions) }}">
