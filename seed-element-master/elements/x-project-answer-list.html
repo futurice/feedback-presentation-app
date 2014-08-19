@@ -32,7 +32,7 @@
         </template>
       </template>
       <div id="next" style="background-color: {{backgrounds[availableSpace]}}" on-tap={{more_tap}} hidden?="{{ !(projects.length > availableSpace)}}" flex vertical layout center center-justified>
-          <core-icon class="icon next" on-tap={{more_tap}} src="/icons/dots.svg"></core-icon>
+          <core-icon class="icon next" on-tap={{more_tap}} style="color: white" icon="forward"></core-icon>
       </div>
       <div id="notfound" hidden?="{{projects.length > 0}}" flex></div>
       <!--div flex style="background-color: {{backgrounds[5]}}" hidden?="{{count != 6}}"></div-->
