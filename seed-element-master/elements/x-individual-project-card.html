@@ -99,7 +99,10 @@
         </div>
         <div id="detail_section" vertical layout flex two>
           <div id="npa_header">Overall</div>
+            <div horizontal layout center-justified center>
             <div id="npa_number">{{project.value.npa_score}}</div>
+            <div style="font-size:35px">/10</div>
+            </div>
           <template repeat="{{ t in groupedTopics(project.value.questions) }}">
             <div horizontal justified center layout>
             <div flex center id="question">{{t.topic}}</div>
