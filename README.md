@@ -4,11 +4,13 @@
 
 The purpose of this project is to visualize feedback data gathered from customers. The actual data is stored in google docs and queried via proxy server.
 
-The application has two main screens: Project list view and averages by topic view. 
+The application has two main screens: Averages by topic view and project list view. User can navigate between the views from the sidebar menu. 
 
 ![Averages by topic](screenshots/screen1.png)
 
 ![Project list](screenshots/screen2.png)
+
+User can also apply filters to data in the sidebar menu. Filters are applied immediatly and the filtered results presented after the filter calculation has ended.
 
 # Development
 
